@@ -1,1 +1,1 @@
-# MiniSystem-Banking
+# Group 2 Banking System
