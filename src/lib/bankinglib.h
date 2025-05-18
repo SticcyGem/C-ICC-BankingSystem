@@ -347,12 +347,6 @@ void initializeAccBackupFromAccount(AccountBackup *backup, const Account *acc);
  */
 void initializeTrans(Transaction *trans);
 
-int accLogin();
-
-int accSignup();
-
-void accLogout(Account *acc);
-
 /***
  *    ____ ____ ____ ____ _  _ _  _ ___     ___ ____ ____ _  _ ____ ____ ____ ___ _ ____ _  _ 
  *    |__| |    |    |  | |  | |\ |  |  .    |  |__/ |__| |\ | [__  |__| |     |  | |  | |\ | 
@@ -360,28 +354,12 @@ void accLogout(Account *acc);
  *                                                                                            
  */
 
-void transDeposit(Account *acc, Transaction *trans);
-
-void transWithdraw(Account *acc, Transaction *trans);
-
-void transBalance(const Account *acc);
-
-void transStatement(const Account *acc, const Transaction *trans);
-
 /***
  *    ____ ____ ____ ____ _  _ _  _ ___     _  _ ____ _  _ _ ___  _  _ _    ____ ___ _ ____ _  _ 
  *    |__| |    |    |  | |  | |\ |  |  .   |\/| |__| |\ | | |__] |  | |    |__|  |  | |  | |\ | 
  *    |  | |___ |___ |__| |__| | \|  |  .   |  | |  | | \| | |    |__| |___ |  |  |  | |__| | \| 
  *                                                                                               
  */
-
-void accEditName(Account *acc);
-
-void accEditAddress(Account *acc);
-
-void accEditPassword(Account *acc);
- 
-void accDelete(Account *acc);
 
 /***
  *    ___  ____ ___ ____ ___  ____ ____ ____     _  _ ____ _  _ _ ___  _  _ _    ____ ___ _ ____ _  _ 
