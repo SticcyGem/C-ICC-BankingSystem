@@ -27,22 +27,17 @@
 #include <conio.h>
 #include <string.h>
 #include <windows.h>
- 
-/// @def DEBUG
-/// @brief Set to 1 to enable debug logging with 1-second delay.
-#define DEBUG 0
-
-/// @def LOG(fmt, ...)
-/// @brief Outputs debug log if DEBUG is enabled.
-#if DEBUG
-    #define LOG(fmt, ...) do { printf("[DEBUG] " fmt "\n", ##__VA_ARGS__); Sleep(1000); } while (0)
-#else
-    #define LOG(fmt, ...)
-#endif
+#include "debug.h"
  
 /// @brief File paths for storing account and transaction data.
 #define ACC_FILE   "Account.txt"
 #define TRANS_FILE "StatementOfAccount.txt"
+#define TEMP_FILE  "data/temp.txt"
+#define EXAMPLE_ACC_FILE "data/example_account.txt"
+
+// -------------------- START UP MENU CHOICES --------------------
+#define MENU_STARTUP_NORMAL   '1' /**< Startup menu option: Normal Mode */
+#define MENU_STARTUP_DEBUG    '2' /**< Auth menu option: Debug Mode */
  
 // -------------------- AUTH MENU CHOICES --------------------
  
@@ -50,7 +45,7 @@
 #define MENU_AUTH_SIGNUP   '2' /**< Auth menu option: Sign Up */
 #define MENU_AUTH_CREDITS  '3' /**< Auth menu option: View Credits */
 #define MENU_AUTH_EXIT     '4' /**< Auth menu option: Exit the program */
- 
+
 // -------------------- MAIN MENU CHOICES --------------------
  
 #define MENU_MAIN_INQUIRY    '1' /**< Main menu option: Account Inquiry */
@@ -70,32 +65,51 @@
 #define MENU_DELETE_NO   '1' /**< Delete confirmation: No */
 #define MENU_DELETE_YES  '2' /**< Delete confirmation: Yes */
 
-/***
- * ███████ ████████ ██████  ██    ██  ██████ ████████ ██    ██ ██████  ███████ 
- * ██         ██    ██   ██ ██    ██ ██         ██    ██    ██ ██   ██ ██      
- * ███████    ██    ██████  ██    ██ ██         ██    ██    ██ ██████  █████   
- *      ██    ██    ██   ██ ██    ██ ██         ██    ██    ██ ██   ██ ██      
- * ███████    ██    ██   ██  ██████   ██████    ██     ██████  ██   ██ ███████                        
- */
+// -------------------- STRUCTURE --------------------
 
 /** 
  * @struct Account
- * @brief Represents a bank account.
+ * @brief Represents a bank account with personal and authentication details.
  * 
- * Holds the personal and account information of a user.
+ * Stores the account holder's personal information, address, balance,
+ * and authentication data, along with a flag for account deletion status.
  */
 typedef struct {
-    int accountNumber;  /**< The unique identifier for the account. */
-    char name[50];      /**< The full name of the account holder. */
-    char street[50];    /**< The street address of the account holder. */
-    char barangay[50];  /**< The barangay (local community) of the account holder. */
-    char city[50];      /**< The city of the account holder. */
-    char region[50];    /**< The region of the account holder. */
-    char postalCode[4]; /**< The postal code of the account holder's address. */
-    float balance;      /**< The current balance of the account. */
-    char password[20];  /**< The password for account authentication. */
-    int toDelete;       /**< Flag indicating if the account is marked for deletion. */
+    int accountNumber;     /**< Unique identifier for the account. */
+    char password[100];    /**< Password for account authentication. */
+    char firstname[50];    /**< First name of the account holder. */
+    char lastname[50];     /**< Last name of the account holder. */
+    char midname[50];      /**< Middle name of the account holder. */
+    char street[50];       /**< Street address of the account holder. */
+    char barangay[50];     /**< Barangay (local community) of the account holder. */
+    char city[50];         /**< City of the account holder. */
+    char region[50];       /**< Region of the account holder. */
+    char postalCode[5];    /**< Postal code of the account holder. */
+    float balance;         /**< Current balance of the account. */
+    int toDelete;          /**< Flag: 0 = active, non-zero = marked for deletion. */
 } Account;
+
+/**
+ * @struct AccountBackup
+ * @brief A backup copy of an account's personal and financial information.
+ *
+ * This struct stores dynamically allocated strings for personal details 
+ * and fixed-size arrays for postal code and balance. It is used to 
+ * keep a copy of an Account's important data for comparison or restoration.
+ * 
+ * Mostly for Logging Purposes
+ */
+typedef struct {
+    char firstname[50];
+    char lastname[50];
+    char midname[50];
+    char street[50];
+    char barangay[50];
+    char city[50];
+    char region[50];
+    char postalCode[5];
+    float balance;
+} AccountBackup;
 
 /**
  * @struct Transaction
@@ -105,24 +119,43 @@ typedef struct {
  */
 typedef struct {
     int accountNumber;        /**< The account number associated with the transaction. */
-    int transactionType;      /**< Type of the transaction (1 = deposit, 0 = withdrawal). */
+    int transactionType;      /**< Type of the transaction (0 = deposit, 1 = withdrawal). */
     char date[20];            /**< Date the transaction took place. */
     float amount;             /**< Amount of money involved in the transaction. */
 } Transaction;
 
-/**
- * ███████ ██    ██ ███    ██  ██████        ██████  ███████  ██████ ██       █████  ██████   █████  ████████ ██  ██████  ███    ██ 
- * ██      ██    ██ ████   ██ ██      ██     ██   ██ ██      ██      ██      ██   ██ ██   ██ ██   ██    ██    ██ ██    ██ ████   ██ 
- * █████   ██    ██ ██ ██  ██ ██             ██   ██ █████   ██      ██      ███████ ██████  ███████    ██    ██ ██    ██ ██ ██  ██ 
- * ██      ██    ██ ██  ██ ██ ██      ██     ██   ██ ██      ██      ██      ██   ██ ██   ██ ██   ██    ██    ██ ██    ██ ██  ██ ██ 
- * ██       ██████  ██   ████  ██████        ██████  ███████  ██████ ███████ ██   ██ ██   ██ ██   ██    ██    ██  ██████  ██   ████                                                                                                                                    
+// -------------------- FUNCTION PROTOTYPES --------------------
+
+/***
+ *    ____ _  _ _  _ ____ ___ _ ____ _  _     _  _ ____ _ _  _    ___  ____ ____ ____ ____ ____ _  _ 
+ *    |___ |  | |\ | |     |  | |  | |\ | .   |\/| |__| | |\ |    |__] |__/ |  | | __ |__/ |__| |\/| 
+ *    |    |__| | \| |___  |  | |__| | \| .   |  | |  | | | \|    |    |  \ |__| |__] |  \ |  | |  |                                                                                                 
  */
 
-/**
- * ░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░░░░░░░█▀▀░█▀▀░█▀█░█▀▀░█▀▄░█▀█░█░░░░░█░█░█▀▀░█▀▀
- * ░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░░▀░░░░█░█░█▀▀░█░█░█▀▀░█▀▄░█▀█░█░░░░░█░█░▀▀█░█▀▀
- * ░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░░▀░░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀░▀░▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀
+
+void handleAuthMenu(int *isAuth, Account *acc);
+
+void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction *trans);
+
+void handleInquiryMenu(const Account *acc, const Transaction *trans);
+
+void handleSettingsMenu(Account *acc);
+
+void handleEditMenu(Account *acc);
+
+void handleDeleteMenu(Account *acc);
+
+/***
+ *    ____ _  _ _  _ ____ ___ _ ____ _  _     ____ ____ _  _ ____ ____ ____ _    
+ *    |___ |  | |\ | |     |  | |  | |\ | .   | __ |___ |\ | |___ |__/ |__| |    
+ *    |    |__| | \| |___  |  | |__| | \| .   |__] |___ | \| |___ |  \ |  | |___ 
+ *                                                                               
  */
+void example1(Account *acc, AccountBackup *accb);
+
+void example2(int accountNumber, Account *acc, const char *filename);
+
+void example3(Account *acc, const char *filename);
 
 /**
  * @brief Pauses the program until the user presses ENTER.
@@ -132,9 +165,31 @@ typedef struct {
 void pauseConsole();
 
 /**
- * ░█▀▀░█▀▄░█▀█░█▀█░█░█░▀█▀░█▀▀░░░█░█░█▀▀░█▀▀░█▀▄░░░▀█▀░█▀█░▀█▀░█▀▀░█▀▄░█▀▀░█▀█░█▀▀░█▀▀
- * ░█░█░█▀▄░█▀█░█▀▀░█▀█░░█░░█░░░░░█░█░▀▀█░█▀▀░█▀▄░░░░█░░█░█░░█░░█▀▀░█▀▄░█▀▀░█▀█░█░░░█▀▀
- * ░▀▀▀░▀░▀░▀░▀░▀░░░▀░▀░▀▀▀░▀▀▀░░░▀▀▀░▀▀▀░▀▀▀░▀░▀░░░▀▀▀░▀░▀░░▀░░▀▀▀░▀░▀░▀░░░▀░▀░▀▀▀░▀▀▀
+ * @brief Clears the console screen.
+ * 
+ * This function clears the console output, providing a clean slate for new output.
+ */
+char menuInput();
+
+/**
+ * @brief Reads user input from the console.
+ * 
+ * This function takes a format string and a variable to store the input.
+ * It uses `scanf` to read the input based on the provided format.
+ * 
+ * @param fmt Format string for input (e.g., "%d", "%s").
+ * @param var Pointer to the variable where the input will be stored.
+ * @return 1 if successful, 0 otherwise.
+ */
+int userInput(const char *fmt, void *var);
+
+
+
+/***
+ *    ____ _  _ _  _ ____ ___ _ ____ _  _     ____ _  _ _ 
+ *    |___ |  | |\ | |     |  | |  | |\ | .   | __ |  | | 
+ *    |    |__| | \| |___  |  | |__| | \| .   |__] |__| | 
+ *                                                        
  */
 
 /**
@@ -182,48 +237,156 @@ void guiAuthMenu();
  * 
  * @see accInquiry(), accDeposit(), accWithdraw(), accSetting(), guiAuthMenu()
  */
-void guiMainMenu();
-
-void guiAccSettingMenu();
-
-void guiAccEditingMenu();
-
-void guiAccDeleteMenu();
-
-void guiAccInquiryMenu();
-
-void guiAccDisplay();
+void guiMainMenu(const Account *acc);
 
 /**
- * ░█▀█░█▀▀░█▀▀░█▀█░█░█░█▀█░▀█▀░░░░░░░█▀▀░█▀▄░█▀▀░█▀█░▀█▀░▀█▀░█▀█░█▀█░░░█▀▀░█░█░█▀▀░▀█▀░█▀▀░█▄█
- * ░█▀█░█░░░█░░░█░█░█░█░█░█░░█░░░▀░░░░█░░░█▀▄░█▀▀░█▀█░░█░░░█░░█░█░█░█░░░▀▀█░░█░░▀▀█░░█░░█▀▀░█░█
- * ░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░░▀░░░▀░░░░▀▀▀░▀░▀░▀▀▀░▀░▀░░▀░░▀▀▀░▀▀▀░▀░▀░░░▀▀▀░░▀░░▀▀▀░░▀░░▀▀▀░▀░▀
+ * @brief Displays the inquiry menu for account-related inquiries.
+ * 
+ * This function prints an ASCII art-styled header and displays the options
+ * available for account inquiries. It is typically shown after the user selects
+ * the inquiry option from the main menu.
+ * 
+ * The menu consists of the following options:
+ * - [1.] Check Balance
+ * - [2.] View Statement of Account
+ * - [3.] Back to Main Menu
+ * 
+ * The function does not take user input; it only displays the menu.
+ * User input should be handled in the main application loop.
  */
+void guiAccSettingMenu();
+
+/**
+ * @brief Displays the account settings menu for editing or deleting account details.
+ * 
+ * This function prints an ASCII art-styled header and displays the options
+ * available for account settings. It is typically shown after the user selects
+ * the account setting option from the main menu.
+ * 
+ * The menu consists of the following options:
+ * - [1.] Display Account Details
+ * - [2.] Edit Account Details
+ * - [3.] Delete Account
+ * - [4.] Back to Main Menu
+ * 
+ * The function does not take user input; it only displays the menu.
+ * User input should be handled in the main application loop.
+ */
+void guiAccEditingMenu();
+
+/**
+ * @brief Displays the account deletion confirmation menu.
+ * 
+ * This function prints an ASCII art-styled header and displays the options
+ * available for confirming account deletion. It is typically shown after the user
+ * selects the delete option from the account settings menu.
+ * 
+ * The menu consists of the following options:
+ * - [1.] No (Cancel Deletion)
+ * - [2.] Yes (Confirm Deletion)
+ * 
+ * The function does not take user input; it only displays the menu.
+ * User input should be handled in the main application loop.
+ */
+void guiAccDeleteMenu();
+
+/**
+ * @brief Displays the account inquiry menu for checking balance and statement.
+ * 
+ * This function prints an ASCII art-styled header and displays the options
+ * available for account inquiries. It is typically shown after the user selects
+ * the inquiry option from the main menu.
+ * 
+ * The menu consists of the following options:
+ * - [1.] Check Balance
+ * - [2.] View Statement of Account
+ * - [3.] Back to Main Menu
+ * 
+ * The function does not take user input; it only displays the menu.
+ * User input should be handled in the main application loop.
+ */
+void guiAccInquiryMenu();
+
+void guiAccDisplay(const Account *acc);
+
+/***
+ *    ____ ____ ____ ____ _  _ _  _ ___     ____ ____ ____ ____ ___ _ ____ _  _ 
+ *    |__| |    |    |  | |  | |\ |  |  .   |    |__/ |___ |__|  |  | |  | |\ | 
+ *    |  | |___ |___ |__| |__| | \|  |  .   |___ |  \ |___ |  |  |  | |__| | \| 
+ *                                                                              
+ */
+
+/**
+ * @brief Initializes the fields of an Account structure to default values.
+ * 
+ * This function sets numeric fields to 0 or 0.0, and string fields to empty strings.
+ * Useful for clearing or resetting an Account before use.
+ * 
+ * @param acc Pointer to the Account structure to initialize.
+ */
+void initializeAcc(Account* acc);
+
+/**
+ * @brief Initializes the fields of an AccountBackup structure to default values.
+ * 
+ * This function sets numeric fields to 0 or 0.0, and string fields to empty strings.
+ * Useful for clearing or resetting an AccountBackup before use.
+ * 
+ * @param backup Pointer to the AccountBackup structure to initialize.
+ */
+void initializeAccBackupFromAccount(AccountBackup *backup, const Account *acc);
+
+/**
+ * @brief Initializes the fields of a Transaction structure to default values.
+ * 
+ * Sets the account number and transaction type to 0, amount to 0.0, 
+ * and clears the date string. This is useful to reset or prepare a 
+ * Transaction structure before usage.
+ * 
+ * @param tran Pointer to the Transaction structure to initialize.
+ */
+void initializeTrans(Transaction *trans);
 
 int accLogin();
 
 int accSignup();
 
-void accDeposit();
+void accLogout(Account *acc);
 
-void accWithdraw();
-
-void accEdit();
-
-void accDelete();
-
-void accLogout();
-
-/**
- * @brief Initializes an Account structure with default values.
- * 
- * This function sets all fields of the given Account pointer to safe default values.
- * Useful before login, signup, or resetting account data to avoid garbage values.
- * 
- * @param acc Pointer to the Account structure to be initialized.
- * 
- * @note Defined in `account.c`.
+/***
+ *    ____ ____ ____ ____ _  _ _  _ ___     ___ ____ ____ _  _ ____ ____ ____ ___ _ ____ _  _ 
+ *    |__| |    |    |  | |  | |\ |  |  .    |  |__/ |__| |\ | [__  |__| |     |  | |  | |\ | 
+ *    |  | |___ |___ |__| |__| | \|  |  .    |  |  \ |  | | \| ___] |  | |___  |  | |__| | \| 
+ *                                                                                            
  */
-void initializeAcc(Account* acc);
 
+void transDeposit(Account *acc, Transaction *trans);
+
+void transWithdraw(Account *acc, Transaction *trans);
+
+void transBalance(const Account *acc);
+
+void transStatement(const Account *acc, const Transaction *trans);
+
+/***
+ *    ____ ____ ____ ____ _  _ _  _ ___     _  _ ____ _  _ _ ___  _  _ _    ____ ___ _ ____ _  _ 
+ *    |__| |    |    |  | |  | |\ |  |  .   |\/| |__| |\ | | |__] |  | |    |__|  |  | |  | |\ | 
+ *    |  | |___ |___ |__| |__| | \|  |  .   |  | |  | | \| | |    |__| |___ |  |  |  | |__| | \| 
+ *                                                                                               
+ */
+
+void accEditName(Account *acc);
+
+void accEditAddress(Account *acc);
+
+void accEditPassword(Account *acc);
+ 
+void accDelete(Account *acc);
+
+/***
+ *    ___  ____ ___ ____ ___  ____ ____ ____     _  _ ____ _  _ _ ___  _  _ _    ____ ___ _ ____ _  _ 
+ *    |  \ |__|  |  |__| |__] |__| [__  |___ .   |\/| |__| |\ | | |__] |  | |    |__|  |  | |  | |\ | 
+ *    |__/ |  |  |  |  | |__] |  | ___] |___ .   |  | |  | | \| | |    |__| |___ |  |  |  | |__| | \| 
+ *                                                                                                    
+ */
 #endif  // BANKINGLIB_H

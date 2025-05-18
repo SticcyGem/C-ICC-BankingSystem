@@ -14,7 +14,7 @@ set /p runNow="Compilation successful. Do you want to run the program now? (Y/N)
 if /i "%runNow%"=="Y" (
     echo.
     echo Running program...
-    BankingSystem.exe
+    start BankingSystem.exe
 ) else (
     exit /b
 )

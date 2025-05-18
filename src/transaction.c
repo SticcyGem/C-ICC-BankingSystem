@@ -7,7 +7,7 @@
  * It accesses and updates Account.txt and StatementOfAccount.txt.
  * 
  * @author 
- * LUMAKIN, Luke Gabriel C.
+ * ESPEJO, John Gabriel R.
  * 
  * @date 
  * May 2025
@@ -15,16 +15,22 @@
 
 #include "lib/bankinglib.h"
 
-// Define transaction-related functions
-void deposit() {
-    printf("Depositing money...\n");
+void transDeposit(Account *acc, AccountBackup *accb, Transaction *trans) {
+    LOGGER();
+    guiAccDeposit(acc);
 }
 
-void withdraw() {
-    printf("Withdrawing money...\n");
+void transWithdraw(Account *acc, AccountBackup *accb, Transaction *trans) {
+    LOGGER();
+    guiAccWithdraw(acc);
 }
 
-void inquiry() {
-    printf("Checking account balance...\n");
+void transBalance(const Account *acc, AccountBackup *accb) {
+    LOGGER();
+    guiAccBalance(acc);
 }
 
+void transStatement(const Account *acc, AccountBackup *accb, const Transaction *trans) {
+    LOGGER();
+    guiAccStatement(acc, trans);
+}

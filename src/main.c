@@ -18,14 +18,54 @@
 
 #include "lib/bankinglib.h"
 
-void handleAuthMenu(int *isAuth) {
-    guiAuthMenu();
-    char choice = getch();
+int main() {
+    logReset();
+    openLogViewer();
+    LOG("Starting Banking System..");
+    system("chcp 65001 > nul");
 
+    Account currentAcc;
+    AccountBackup currentAccb;
+    Transaction currentTrans;
+    initializeAcc(&currentAcc);
+    initializeAccBackupFromAccount(&currentAccb, &currentAcc);
+    initializeTrans(&currentTrans);
+    int isAuth = 0;
+    while (DEBUG) {
+        guiDEBUG();
+        LOG_WARN("Debug Mode: ON");
+        LOG_WARN("To turn off DEBUG MODE, go to debug.h and set DEBUG to 0");
+        char choice = menuInput();
+        switch (choice) {
+            case MENU_STARTUP_NORMAL:
+                LOG("Selected: Normal Mode");
+                while (1) {
+                    if (!isAuth) {
+                        handleAuthMenu(&isAuth, &currentAcc);
+                    } else {
+                        handleMainMenu(&isAuth, &currentAcc, &currentAccb, &currentTrans);
+                    }
+                }
+                break;
+            case MENU_STARTUP_DEBUG:
+                LOG("Selected: Debug Mode");
+                example1(&currentAcc, &currentAccb);
+                break;
+            default:
+                LOG("Selected: Invalid Choice");
+                break;
+        }
+    }
+    return 0;
+}
+// -------------------- AUTHENTICATION FUNCTIONS --------------------
+void handleAuthMenu(int *isAuth, Account *acc) {
+    guiAuthMenu();
+    char choice = menuInput();
     switch (choice) {
         case MENU_AUTH_LOGIN:
             LOG("Selected: Log In");
-            if (accLogin() == 1) {
+            if (accLogin(acc) == 1) {
                 LOG("Log in Successful.");
                 *isAuth = 1;
             } else {
@@ -34,7 +74,7 @@ void handleAuthMenu(int *isAuth) {
             break;
         case MENU_AUTH_SIGNUP:
             LOG("Selected: Sign Up");
-            if (accSignup() == 1) {
+            if (accSignup(acc) == 1) {
                 LOG("Sign Up Successful.");
                 *isAuth = 1;
             } else {
@@ -54,17 +94,55 @@ void handleAuthMenu(int *isAuth) {
     }
 }
 
-void handleInquiryMenu() {
+// -------------------- MAIN MENU FUNCTIONS --------------------
+void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction *trans) {
+    int loop = 1;
+    while (loop){
+        guiMainMenu(acc);
+        char choice = menuInput();
+        switch (choice) {
+            case MENU_MAIN_INQUIRY:
+                LOG("Selected: Inquiry");
+                handleInquiryMenu(acc, trans);
+                break;
+            case MENU_MAIN_DEPOSIT:
+                LOG("Selected: Deposit");
+                transDeposit(acc, trans);
+                break;
+            case MENU_MAIN_WITHDRAW:
+                LOG("Selected: Withdraw");
+                transWithdraw(acc, trans);
+                break;
+            case MENU_MAIN_SETTINGS:
+                LOG("Selected: Account Setting");
+                handleSettingsMenu(acc);
+                break;
+            case MENU_MAIN_LOGOUT:
+                LOG("Selected: Log Out");
+                *isAuth = 0;
+                loop = 0;
+                break;
+            default:
+                LOG("Selected: Invalid Choice");
+                break;
+        }
+    }
+}
+
+// -------------------- INQUIRY MENU FUNCTIONS --------------------
+void handleInquiryMenu(const Account *acc, const Transaction *trans) {
     int loop = 1;
     while (loop){
         guiAccInquiryMenu();
-        char choice = getch();
+        char choice = menuInput();
         switch (choice) {
             case MENU_INQUIRY_BALANCE:
                 LOG("Selected: Check Balance");
+                transBalance(acc);
                 break;
             case MENU_INQUIRY_STATEMENT:
                 LOG("Selected: Account Statement");
+                transStatement(acc, trans);
                 break;
             case MENU_INQUIRY_BACK:
                 LOG("Selected: Back");
@@ -77,36 +155,24 @@ void handleInquiryMenu() {
     }
 }
 
-void handleSettingsMenu() {
+// -------------------- SETTINGS MENU FUNCTIONS --------------------
+void handleSettingsMenu(Account *acc) {
     int loop = 1;
-    while (loop == 1) {
+    while (loop) {
         guiAccSettingMenu();
-        char choice = getch();
+        char choice = menuInput();
         switch (choice) {
             case '1':
                 LOG("Selected: Display Account Details");
-                guiAccDisplay();
+                guiAccDisplay(acc);
                 break;
             case '2':
                 LOG("Selected: Edit Account Details");
-                accEdit();
+                handleEditMenu(acc);
                 break;
             case '3':
                 LOG("Selected: Delete Account");
-                guiAccDeleteMenu();
-                char choiceAccDelMenu = getch();
-                switch (choiceAccDelMenu) {
-                    case MENU_DELETE_NO:
-                        LOG("Selected: No - Delete Account");
-                        break;
-                    case MENU_DELETE_YES:
-                        LOG("Selected: Yes - Delete Account");
-                        accDelete();
-                        break;
-                    default:
-                        LOG("Selected: Invalid Choice");
-                        break;
-                }
+                handleDeleteMenu(acc);
                 break;
             case '4':
                 LOG("Selected: Back");
@@ -119,51 +185,55 @@ void handleSettingsMenu() {
     }
 }
 
-void handleMainMenu(int *isAuth) {
-    guiMainMenu();
-    char choice = getch();
-    switch (choice) {
-        case MENU_MAIN_INQUIRY:
-            LOG("Selected: Inquiry");
-            handleInquiryMenu();
-            break;
-        case MENU_MAIN_DEPOSIT:
-            LOG("Selected: Deposit");
-            accDeposit();
-            break;
-        case MENU_MAIN_WITHDRAW:
-            LOG("Selected: Withdraw");
-            accWithdraw();
-            break;
-        case MENU_MAIN_SETTINGS:
-            LOG("Selected: Account Setting");
-            handleSettingsMenu();
-            break;
-        case MENU_MAIN_LOGOUT:
-            LOG("Selected: Log Out");
-            accLogout();
-            *isAuth = 0;
-            break;
-        default:
-            LOG("Selected: Invalid Choice");
-            break;
+// -------------------- EDIT MENU FUNCTIONS --------------------
+void handleEditMenu(Account *acc) {
+    int loop = 1;
+    while (loop) {
+        guiAccEditingMenu();
+        char choice = menuInput();
+        switch (choice) {
+            case '1':
+                LOG("Selected: Edit Name");
+                accEditName(acc);
+                break;
+            case '2':
+                LOG("Selected: Edit Address");
+                accEditAddress(acc);
+                break;
+            case '3':
+                LOG("Selected: Edit Password");
+                accEditPassword(acc);
+                break;
+            case '4':
+                LOG("Selected: Back");
+                loop = 0;
+                break;
+            default:
+                LOG("Selected: Invalid Choice");
+                break;
+        }
     }
 }
 
-int main() {
-    LOG("Starting Banking System..");
-    system("chcp 65001 > nul");
-    Account currentAcc;
-    initializeAcc(&currentAcc);
-    int isAuth = 0;
-
-    while (1) {
-        if (!isAuth) {
-            handleAuthMenu(&isAuth);
-        } else {
-            handleMainMenu(&isAuth);
+// -------------------- DELETE MENU FUNCTIONS --------------------
+void handleDeleteMenu(Account *acc){
+    int loop = 1;
+    while (loop) {
+        guiAccDeleteMenu();
+        char choice = menuInput();
+        switch (choice) {
+            case MENU_DELETE_NO:
+                LOG("Selected: No - Delete Account");
+                loop = 0;
+                break;
+            case MENU_DELETE_YES:
+                LOG("Selected: Yes - Delete Account");
+                accDelete(acc);
+                loop = 0;
+                break;
+            default:
+                LOG("Selected: Invalid Choice");
+                break;
         }
     }
-
-    return 0;
 }
