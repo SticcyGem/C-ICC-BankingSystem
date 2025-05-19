@@ -34,7 +34,7 @@ int userInput(const char *fmt, void *var) {
             if (INPUT_DEBUG) {
                 LOG("No input provided.");
             }
-            return 0;  // Indicate no input
+            return 0;
         }
 
         if (strcmp(fmt, "%d") == 0) {
@@ -283,7 +283,7 @@ void example3(Account *acc, const char *filename) {
         file = fopen(filename, "rb"); // Reopen in read mode
     }
 
-    FILE *temp = fopen("../data/temp.dat", "wb");
+    FILE *temp = fopen("data/temp.dat", "wb");
     if (!temp) {
         fclose(file);
         LOG_ERROR("Failed to open temp file for update.");
@@ -318,7 +318,7 @@ void example3(Account *acc, const char *filename) {
     fclose(temp);
 
     if (!found) {
-        temp = fopen("../data/temp.dat", "ab");
+        temp = fopen("data/temp.dat", "ab");
         if (temp) {
             size_t written = fwrite(acc, sizeof(Account), 1, temp);
             if (written != 1) {
@@ -338,7 +338,7 @@ void example3(Account *acc, const char *filename) {
         LOG("Removed old file: %s", filename);
     }
 
-    if (rename("../data/temp.dat", filename) != 0) {
+    if (rename("data/temp.dat", filename) != 0) {
         LOG_ERROR("Failed to rename temp file to: %s", filename);
     } else {
         LOG("Renamed temp file to: %s", filename);
