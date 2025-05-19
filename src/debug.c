@@ -87,3 +87,20 @@ void LOG_COLOR(const char *ansi_color, const char *fmt, ...) {
 
     fclose(f);
 }
+
+void logReset() {
+    LOGGER();
+    FILE *logFile = fopen(DEBUG_LOG_FILE, "w");
+    if (logFile) {
+        fclose(logFile);
+    } else {
+        LOG("Error resetting log file");
+    }
+}
+
+void openLogViewer() {
+    LOGGER();
+    #if DEBUG
+        system("start \"LogViewerWindow\" powershell -NoExit -Command \"$host.UI.RawUI.WindowTitle = 'LogViewerWindow'; Get-Content log.txt -Wait\"");
+    #endif
+}
