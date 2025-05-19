@@ -5,19 +5,6 @@
 static char sessionLogFilename[256] = "";
 static int logFileInitialized = 0;
 
-static void initSessionLogFilename() {
-    if (!logFileInitialized) {
-        _mkdir("logs");
-        time_t now = time(NULL);
-        struct tm *t = localtime(&now);
-        snprintf(sessionLogFilename, sizeof(sessionLogFilename),
-                 "logs/%04d%02d%02d_%02d%02d%02d_log.txt",
-                 t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-                 t->tm_hour, t->tm_min, t->tm_sec);
-        logFileInitialized = 1;
-    }
-}
-
 // === Implementation of write_log ===
 void write_log(const char *ansi_color, const char *fmt, ...) {
     static char history_filename[64] = "";

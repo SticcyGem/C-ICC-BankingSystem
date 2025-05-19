@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdarg.h>  // for va_list
+#include <stdarg.h>
 
 // === Toggle Flags ===
 #define DEBUG 1         // Set 0 to disable debug logs
@@ -105,5 +105,8 @@ void LOG_COLOR(const char *ansi_color, const char *fmt, ...);
 // Optional functions you might implement later
 void openLogViewer();
 void logReset();
+void initSessionLogFilename();
+void write_log(const char *ansi_color, const char *fmt, ...);
+void LOG_COLOR(const char *ansi_color, const char *fmt, ...);
 
 #endif // DEBUG_H

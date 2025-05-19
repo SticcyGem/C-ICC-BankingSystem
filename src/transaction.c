@@ -17,12 +17,14 @@
 
 void transDeposit(Account *acc, AccountBackup *accb, Transaction *trans) {
     LOGGER();
-    guiAccDeposit(acc);
+    float depositAmmount = 0;
+    guiAccDeposit(acc, depositAmmount);
 }
 
 void transWithdraw(Account *acc, AccountBackup *accb, Transaction *trans) {
     LOGGER();
-    guiAccWithdraw(acc);
+    float withdrawAmmount = 0;
+    guiAccWithdraw(acc, withdrawAmmount);
 }
 
 void transBalance(const Account *acc, AccountBackup *accb) {

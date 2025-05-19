@@ -104,7 +104,6 @@ void example1(Account *acc, AccountBackup *accb) {
 
         char mode;
         int accountNumber = 0;
-        int loginSuccess = 0;
 
         while (1) {
             printf("[1.] Login\n");
@@ -136,8 +135,6 @@ void example1(Account *acc, AccountBackup *accb) {
                     system("cls");
                     continue;
                 }
-            
-                loginSuccess = 1;
                 break;
             } else if (mode == '2') {
                 initializeAccBackupFromAccount(accb, acc);
@@ -160,8 +157,6 @@ void example1(Account *acc, AccountBackup *accb) {
 
                 initializeAccBackupFromAccount(accb, acc);
                 example3(acc, EXAMPLE_ACC_FILE);
-
-                loginSuccess = 1;
                 break;
             } else {
                 printf("Invalid option selected.\n");

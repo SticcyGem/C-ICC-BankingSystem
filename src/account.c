@@ -86,6 +86,8 @@ void initializeAcc(Account *acc) {
 
 void initializeAccBackupFromAccount(AccountBackup *backup, const Account *acc) {
     LOGGER();
+    backup->accountNumber = acc->accountNumber;
+
     strncpy(backup->firstname, acc->firstname, sizeof(backup->firstname));
     backup->firstname[sizeof(backup->firstname) - 1] = '\0';
 
@@ -137,18 +139,26 @@ int getNextAccountNumber(const char *filename) {
     return maxAccNum + 1;
 }
 
-int accLogin(){
+int accLogin(Account *acc, AccountBackup*accb){
     LOGGER();
+    printf("Account Number: ");
+    userInput("%d", &acc->accountNumber);
+    LOG_STRUCT_CHANGE_VAL("Account Number:", accb->accountNumber, acc->accountNumber);
     return 1;
 }
 
-int accSignup(){
+int accSignup(Account *acc, AccountBackup*accb){
     LOGGER();
+    printf("Account Number: ");
+    userInput("%d", &acc->accountNumber);
+    LOG_STRUCT_CHANGE_VAL("Account Number:", accb->accountNumber, acc->accountNumber);
     return 1;
 }
 
-void accLogout(Account *acc) {
+void accLogout(Account *acc, AccountBackup*accb) {
     LOGGER();
+    initializeAcc(acc);
+    initializeAccBackupFromAccount(accb, acc);
 }
 
 void accDelete(Account *acc) {

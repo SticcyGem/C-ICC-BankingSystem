@@ -56,8 +56,10 @@ int saveOrUpdateAccount(Account *acc, const char *filename){
 
 int getTransactionsByAcc(int accountNumber, Transaction *list, const char *filename){
     LOGGER();
+    return 1;
 }
 
 int logTransaction(int accountNumber, Transaction *trans, const char *filename){
     LOGGER();
+    return 1;
 }

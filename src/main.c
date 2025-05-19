@@ -41,7 +41,7 @@ int main() {
                 LOG("Selected: Normal Mode");
                 while (1) {
                     if (!isAuth) {
-                        handleAuthMenu(&isAuth, &currentAcc);
+                        handleAuthMenu(&isAuth, &currentAcc, &currentAccb);
                     } else {
                         handleMainMenu(&isAuth, &currentAcc, &currentAccb, &currentTrans);
                     }
@@ -59,13 +59,13 @@ int main() {
     return 0;
 }
 // -------------------- AUTHENTICATION FUNCTIONS --------------------
-void handleAuthMenu(int *isAuth, Account *acc) {
+void handleAuthMenu(int *isAuth, Account *acc, AccountBackup *accb) {
     guiAuthMenu();
     char choice = menuInput();
     switch (choice) {
         case MENU_AUTH_LOGIN:
             LOG("Selected: Log In");
-            if (accLogin(acc) == 1) {
+            if (accLogin(acc, accb) == 1) {
                 LOG("Log in Successful.");
                 *isAuth = 1;
             } else {
@@ -74,7 +74,7 @@ void handleAuthMenu(int *isAuth, Account *acc) {
             break;
         case MENU_AUTH_SIGNUP:
             LOG("Selected: Sign Up");
-            if (accSignup(acc) == 1) {
+            if (accSignup(acc, accb) == 1) {
                 LOG("Sign Up Successful.");
                 *isAuth = 1;
             } else {
@@ -103,15 +103,15 @@ void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction 
         switch (choice) {
             case MENU_MAIN_INQUIRY:
                 LOG("Selected: Inquiry");
-                handleInquiryMenu(acc, trans);
+                handleInquiryMenu(acc, accb, trans);
                 break;
             case MENU_MAIN_DEPOSIT:
                 LOG("Selected: Deposit");
-                transDeposit(acc, trans);
+                transDeposit(acc, accb, trans);
                 break;
             case MENU_MAIN_WITHDRAW:
                 LOG("Selected: Withdraw");
-                transWithdraw(acc, trans);
+                transWithdraw(acc, accb, trans);
                 break;
             case MENU_MAIN_SETTINGS:
                 LOG("Selected: Account Setting");
@@ -130,7 +130,7 @@ void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction 
 }
 
 // -------------------- INQUIRY MENU FUNCTIONS --------------------
-void handleInquiryMenu(const Account *acc, const Transaction *trans) {
+void handleInquiryMenu(const Account *acc, AccountBackup *accb, const Transaction *trans) {
     int loop = 1;
     while (loop){
         guiAccInquiryMenu();
@@ -138,11 +138,11 @@ void handleInquiryMenu(const Account *acc, const Transaction *trans) {
         switch (choice) {
             case MENU_INQUIRY_BALANCE:
                 LOG("Selected: Check Balance");
-                transBalance(acc);
+                transBalance(acc, accb);
                 break;
             case MENU_INQUIRY_STATEMENT:
                 LOG("Selected: Account Statement");
-                transStatement(acc, trans);
+                transStatement(acc, accb, trans);
                 break;
             case MENU_INQUIRY_BACK:
                 LOG("Selected: Back");
