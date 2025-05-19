@@ -91,6 +91,9 @@ void initializeAccBackupFromAccount(AccountBackup *backup, const Account *acc) {
     strncpy(backup->firstname, acc->firstname, sizeof(backup->firstname));
     backup->firstname[sizeof(backup->firstname) - 1] = '\0';
 
+    strncpy(backup->password, acc->password, sizeof(backup->password));
+    backup->password[sizeof(backup->password) - 1] = '\0';
+
     strncpy(backup->lastname, acc->lastname, sizeof(backup->lastname));
     backup->lastname[sizeof(backup->lastname) - 1] = '\0';
 
@@ -113,6 +116,8 @@ void initializeAccBackupFromAccount(AccountBackup *backup, const Account *acc) {
     backup->postalCode[sizeof(backup->postalCode) - 1] = '\0';
 
     backup->balance = acc->balance;
+
+    backup->toDelete = acc->toDelete;
 }
 
 
@@ -161,8 +166,10 @@ void accLogout(Account *acc, AccountBackup*accb) {
     initializeAccBackupFromAccount(accb, acc);
 }
 
-void accDelete(Account *acc) {
+void accDelete(Account *acc, AccountBackup*accb) {
     LOGGER();
+    acc->toDelete = 1;
+    LOG_STRUCT_CHANGE_VAL("Deletion:", accb->toDelete, acc->balance);
 }
 
 void accEditName(Account *acc) {

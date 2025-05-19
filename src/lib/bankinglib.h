@@ -51,6 +51,7 @@ typedef struct {
 
 typedef struct {
     int accountNumber;
+    char password[100];
     char firstname[50];
     char lastname[50];
     char midname[50];
@@ -60,6 +61,7 @@ typedef struct {
     char region[50];
     char postalCode[5];
     float balance;
+    int toDelete;
 } AccountBackup;
 
 typedef struct {
