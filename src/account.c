@@ -72,7 +72,7 @@ void initializeAcc(Account *acc) {
     }
 
     strcpy(acc->password, "");
-    strcpy(acc->firstname, "");
+    strcpy(acc->firstname, "Emmanuel");
     strcpy(acc->lastname, "");
     strcpy(acc->midname, "");
     strcpy(acc->street, "");
@@ -120,7 +120,6 @@ void initializeAccBackupFromAccount(AccountBackup *backup, const Account *acc) {
     backup->toDelete = acc->toDelete;
 }
 
-
 void initializeTrans(Transaction* tran){
     LOGGER();
     tran->accountNumber = 0;
@@ -148,7 +147,7 @@ int accLogin(Account *acc, AccountBackup*accb){
     LOGGER();
     printf("Account Number: ");
     userInput("%d", &acc->accountNumber);
-    LOG_STRUCT_CHANGE_VAL("Account Number:", accb->accountNumber, acc->accountNumber);
+    LOG_STRUCT_CHANGE_VAL("Account Number", accb->accountNumber, acc->accountNumber);
     return 1;
 }
 
@@ -156,7 +155,7 @@ int accSignup(Account *acc, AccountBackup*accb){
     LOGGER();
     printf("Account Number: ");
     userInput("%d", &acc->accountNumber);
-    LOG_STRUCT_CHANGE_VAL("Account Number:", accb->accountNumber, acc->accountNumber);
+    LOG_STRUCT_CHANGE_VAL("Account Number", accb->accountNumber, acc->accountNumber);
     return 1;
 }
 
@@ -172,15 +171,27 @@ void accDelete(Account *acc, AccountBackup*accb) {
     LOG_STRUCT_CHANGE_VAL("Deletion:", accb->toDelete, acc->balance);
 }
 
-void accEditName(Account *acc) {
+void accEditName(Account *acc, AccountBackup*accb) {
+    LOGGER();
+    guiAccEditName(acc);
+    guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME);
+
+    printf("Editing Last Name (press Enter to skip): ");
+    userInput("%s", acc->lastname);
+    LOG_STRUCT_CHANGE_STR("Last Name", accb->lastname, acc->lastname);
+
+    printf("Editing Middle Name (press Enter to skip): ");
+    userInput("%s", acc->midname);
+    LOG_STRUCT_CHANGE_STR("Middle Name", accb->midname, acc->midname);
+
+    initializeAccBackupFromAccount(accb, acc);
+}
+
+void accEditAddress(Account *acc, AccountBackup*accb) {
     LOGGER();
 }
 
-void accEditAddress(Account *acc) {
-    LOGGER();
-}
-
-void accEditPassword(Account *acc) {
+void accEditPassword(Account *acc, AccountBackup*accb) {
     LOGGER();
 }
 

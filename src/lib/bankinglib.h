@@ -34,6 +34,18 @@
 #define MENU_DELETE_NO   '1'
 #define MENU_DELETE_YES  '2'
 
+#define GUI_INPUT_ACCOUNTNUMBER '1'
+#define GUI_INPUT_PASSWORD      '2'
+#define GUI_INPUT_FIRSTNAME     '3'
+#define GUI_INPUT_LASTNAME      '4'
+#define GUI_INPUT_MIDNAME       '5'
+#define GUI_INPUT_STREET        '6'
+#define GUI_INPUT_BARANGAY      '7'
+#define GUI_INPUT_CITY          '8'
+#define GUI_INPUT_REGION        '9'
+#define GUI_INPUT_POSTALCODE    '10'
+#define GUI_INPUT_BALANCE       '11'
+
 typedef struct {
     int accountNumber;
     char password[100];
@@ -75,9 +87,9 @@ typedef struct {
 void handleAuthMenu(int *isAuth, Account *acc, AccountBackup *accb);
 void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction *trans);
 void handleInquiryMenu(const Account *acc, AccountBackup *accb, const Transaction *trans);
-void handleSettingsMenu(Account *acc);
-void handleEditMenu(Account *acc);
-void handleDeleteMenu(Account *acc);
+void handleSettingsMenu(Account *acc, AccountBackup *accb);
+void handleEditMenu(Account *acc, AccountBackup *accb);
+void handleDeleteMenu(Account *acc, AccountBackup *accb);
 
 // account.c
 void initializeAcc(Account *acc);
@@ -87,10 +99,10 @@ int getNextAccountNumber(const char *filename);
 int accLogin(Account *acc, AccountBackup*accb);
 int accSignup(Account *acc, AccountBackup*accb);
 void accLogout(Account *acc, AccountBackup*accb);
-void accDelete(Account *acc);
-void accEditName(Account *acc);
-void accEditAddress(Account *acc);
-void accEditPassword(Account *acc);
+void accDelete(Account *acc, AccountBackup*accb);
+void accEditName(Account *acc, AccountBackup*accb);
+void accEditAddress(Account *acc, AccountBackup*accb);
+void accEditPassword(Account *acc, AccountBackup*accb);
 void accDisplay(const Account *acc);
 void transDisplay(const Transaction *trans);
 
@@ -124,6 +136,7 @@ void guiAccDisplay(const Account *acc);
 void guiAccBalance(const Account *acc);
 void guiAccDeposit(const Account *acc, float amount);
 void guiAccWithdraw(const Account *acc, float amount);
+void guiStringInput(Account *acc, AccountBackup *accb, char choice);
 void guiAccEditName(const Account *acc);
 void guiAccEditAddress(const Account *acc);
 void guiAccEditPassword(const Account *acc);

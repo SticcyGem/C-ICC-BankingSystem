@@ -68,23 +68,6 @@ void pauseConsole() {
     LOG_KEY_INPUT(ch);
 }
 
-void logReset() {
-    LOGGER();
-    FILE *logFile = fopen(DEBUG_LOG_FILE, "w");
-    if (logFile) {
-        fclose(logFile);
-    } else {
-        LOG("Error resetting log file");
-    }
-}
-
-void openLogViewer() {
-    LOGGER();
-    #if DEBUG
-        system("start \"LogViewerWindow\" powershell -NoExit -Command \"$host.UI.RawUI.WindowTitle = 'LogViewerWindow'; Get-Content log.txt -Wait\"");
-    #endif
-}
-
 int fileExists(const char *filename) {
     FILE *file = fopen(filename, "rb");
     if (file) {

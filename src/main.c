@@ -115,7 +115,7 @@ void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction 
                 break;
             case MENU_MAIN_SETTINGS:
                 LOG("Selected: Account Setting");
-                handleSettingsMenu(acc);
+                handleSettingsMenu(acc, accb);
                 break;
             case MENU_MAIN_LOGOUT:
                 LOG("Selected: Log Out");
@@ -156,7 +156,7 @@ void handleInquiryMenu(const Account *acc, AccountBackup *accb, const Transactio
 }
 
 // -------------------- SETTINGS MENU FUNCTIONS --------------------
-void handleSettingsMenu(Account *acc) {
+void handleSettingsMenu(Account *acc, AccountBackup *accb) {
     int loop = 1;
     while (loop) {
         guiAccSettingMenu();
@@ -168,11 +168,11 @@ void handleSettingsMenu(Account *acc) {
                 break;
             case '2':
                 LOG("Selected: Edit Account Details");
-                handleEditMenu(acc);
+                handleEditMenu(acc, accb);
                 break;
             case '3':
                 LOG("Selected: Delete Account");
-                handleDeleteMenu(acc);
+                handleDeleteMenu(acc, accb);
                 break;
             case '4':
                 LOG("Selected: Back");
@@ -186,7 +186,7 @@ void handleSettingsMenu(Account *acc) {
 }
 
 // -------------------- EDIT MENU FUNCTIONS --------------------
-void handleEditMenu(Account *acc) {
+void handleEditMenu(Account *acc, AccountBackup *accb) {
     int loop = 1;
     while (loop) {
         guiAccEditingMenu();
@@ -194,15 +194,15 @@ void handleEditMenu(Account *acc) {
         switch (choice) {
             case '1':
                 LOG("Selected: Edit Name");
-                accEditName(acc);
+                accEditName(acc, accb);
                 break;
             case '2':
                 LOG("Selected: Edit Address");
-                accEditAddress(acc);
+                accEditAddress(acc, accb);
                 break;
             case '3':
                 LOG("Selected: Edit Password");
-                accEditPassword(acc);
+                accEditPassword(acc, accb);
                 break;
             case '4':
                 LOG("Selected: Back");
@@ -216,7 +216,7 @@ void handleEditMenu(Account *acc) {
 }
 
 // -------------------- DELETE MENU FUNCTIONS --------------------
-void handleDeleteMenu(Account *acc){
+void handleDeleteMenu(Account *acc, AccountBackup *accb) {
     int loop = 1;
     while (loop) {
         guiAccDeleteMenu();
@@ -228,7 +228,7 @@ void handleDeleteMenu(Account *acc){
                 break;
             case MENU_DELETE_YES:
                 LOG("Selected: Yes - Delete Account");
-                accDelete(acc);
+                accDelete(acc, accb);
                 loop = 0;
                 break;
             default:

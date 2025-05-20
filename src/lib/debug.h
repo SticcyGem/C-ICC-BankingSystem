@@ -37,28 +37,32 @@ void LOG_COLOR(const char *ansi_color, const char *fmt, ...);
     #define LOG_STRUCT_CHANGE_STR(fieldName, oldVal, newVal) do { \
         if (strcmp(oldVal, newVal) != 0) { \
             LOG_COLOR(ANSI_COLOR_WARN, "Struct Change - %s: \"%s\" -> \"%s\"", fieldName, oldVal, newVal); \
+        } else if (strcmp(oldVal, newVal) == 0) { \
+            LOG_COLOR(ANSI_COLOR_WARN, "Struct Change - %s unchanged: \"%s\"", fieldName, oldVal); \
         } \
     } while (0)
 
     #define LOG_STRUCT_CHANGE_VAL(fieldName, oldVal, newVal) do { \
         if ((oldVal) != (newVal)) { \
             LOG_COLOR(ANSI_COLOR_WARN, "Struct Change - %s: %g -> %g", fieldName, (double)(oldVal), (double)(newVal)); \
-        } \
-    } while (0)
-
-    #define LOG_FILE_CHANGE_STR(field, old_val, new_val) do { \
-        if (strlen(new_val) > 0 && strcmp(old_val, new_val) != 0) { \
-            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s changed: \"%s\" -> \"%s\"", field, old_val, new_val); \
-        } else if (strcmp(old_val, new_val) == 0) { \
-            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s unchanged: \"%s\"", field, old_val); \
-        } \
-    } while (0)
-
-    #define LOG_FILE_CHANGE_VAL(field, old_val, new_val) do { \
-        if ((old_val) != (new_val)) { \
-            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s changed: \"%g\" -> \"%g\"", field, (double)(old_val), (double)(new_val)); \
         } else { \
-            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s unchanged: \"%g\"", field, (double)(old_val)); \
+            LOG_COLOR(ANSI_COLOR_WARN, "Struct Change - %s unchanged: \"%g\"", fieldName, (double)(oldVal)); \
+        } \
+    } while (0)
+
+    #define LOG_FILE_CHANGE_STR(fieldName, oldVal, newVal) do { \
+        if (strlen(newVal) > 0 && strcmp(oldVal, newVal) != 0) { \
+            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s changed: \"%s\" -> \"%s\"", fieldName, oldVal, newVal); \
+        } else if (strcmp(oldVal, newVal) == 0) { \
+            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s unchanged: \"%s\"", fieldName, oldVal); \
+        } \
+    } while (0)
+
+    #define LOG_FILE_CHANGE_VAL(fieldName, oldVal, newVal) do { \
+        if ((oldVal) != (newVal)) { \
+            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s changed: \"%g\" -> \"%g\"", fieldName, (double)(oldVal), (double)(newVal)); \
+        } else { \
+            LOG_COLOR(ANSI_COLOR_FILE, "File Save - %s unchanged: \"%g\"", fieldName, (double)(oldVal)); \
         } \
     } while (0)
        
