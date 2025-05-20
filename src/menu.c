@@ -360,20 +360,97 @@ void guiStringInput(Account *acc, AccountBackup *accb, char choice){
             LOG_STRUCT_CHANGE_STR("First Name", accb->firstname, acc->firstname);
             break;
         case GUI_INPUT_LASTNAME:
+            printf(
+                "\033[1;33m\n"
+                "                                          █   █▀█ █▀▀ ▀█▀   █▀█ █▀█ █▄█ █▀▀                                          \n"
+                "                                          █   █▀█ ▀▀█  █    █ █ █▀█ █ █ █▀▀                                          \n"
+                "                                          ▀▀▀ ▀ ▀ ▀▀▀  ▀    ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀                                          \n"
+                "\033[0m\n"
+            );
+            printf("      %49s   ->   \033[1;33m", accb->lastname);
+            if (!userInput("%s", acc->lastname)) {
+                printf("\033[1A\r\033[0m      %49s   ->   \033[1;33m%s", accb->lastname, accb->lastname);
+                fflush(stdout);
+            }
+            LOG_STRUCT_CHANGE_STR("Last Name", accb->lastname, acc->lastname);
             break;
         case GUI_INPUT_MIDNAME:
+            printf(
+                "\033[1;33m\n"
+                "                                      █▄█ ▀█▀ █▀▄ █▀▄ █   █▀▀   █▀█ █▀█ █▄█ █▀▀                                      \n"
+                "                                      █ █  █  █ █ █ █ █   █▀▀   █ █ █▀█ █ █ █▀▀                                      \n"
+                "                                      ▀ ▀ ▀▀▀ ▀▀  ▀▀  ▀▀▀ ▀▀▀   ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀                                      \n"
+                "\033[0m\n"
+            );
+            printf("      %49s   ->   \033[1;33m", accb->midname);
+            if (!userInput("%s", acc->midname)) {
+                printf("\033[1A\r\033[0m      %49s   ->   \033[1;33m%s", accb->midname, accb->midname);
+                fflush(stdout);
+            }
+            LOG_STRUCT_CHANGE_STR("Middle Name", accb->midname, acc->midname);
             break;
         case GUI_INPUT_STREET:
+            printf(
+                "\033[1;33m\n"
+                "                                               █▀▀ ▀█▀ █▀▄ █▀▀ █▀▀ ▀█▀                                               \n"
+                "                                               ▀▀█  █  █▀▄ █▀▀ █▀▀  █                                                \n"
+                "                                               ▀▀▀  ▀  ▀ ▀ ▀▀▀ ▀▀▀  ▀                                                \n"
+                "\033[0m\n"
+            );
             break;
         case GUI_INPUT_BARANGAY:
+            printf(
+                "\033[1;33m\n"
+                "                                        █▀▄ █▀█ █▀▄ █▀█ █▀█ █▀▀ █▀█ █ █                                            \n"
+                "                                        █▀▄ █▀█ █▀▄ █▀█ █ █ █ █ █▀█  █                                             \n"
+                "                                        ▀▀  ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀ ▀  ▀                                             \n"
+                "\033[0m\n"
+            );
             break;
         case GUI_INPUT_CITY:
+            printf(
+                "\033[1;33m\n"
+                "                                        █▀▀ ▀█▀ ▀█▀ █ █                                                            \n"
+                "                                        █    █   █   █                                                             \n"
+                "                                        ▀▀▀ ▀▀▀  ▀   ▀                                                             \n"
+                "\033[0m\n"
+            );
             break;
         case GUI_INPUT_REGION:
+            printf(
+                "\033[1;33m\n"
+                "                                        █▀▄ █▀▀ █▀▀ ▀█▀ █▀█ █▀█                                                    \n"
+                "                                        █▀▄ █▀▀ █ █  █  █ █ █ █                                                    \n"
+                "                                        ▀ ▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀                                                    \n"
+                "\033[0m\n"
+            );
             break;
         case GUI_INPUT_POSTALCODE:
+            printf(
+                "\033[1;33m\n"
+                "                                        █▀█ █▀█ █▀▀ ▀█▀ █▀█ █     █▀▀ █▀█ █▀▄ █▀▀                                  \n"
+                "                                        █▀▀ █ █ ▀▀█  █  █▀█ █     █   █ █ █ █ █▀▀                                  \n"
+                "                                        ▀   ▀▀▀ ▀▀▀  ▀  ▀ ▀ ▀▀▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀                                  \n"
+                "\033[0m\n"
+            );
             break;
-        case GUI_INPUT_BALANCE:
+        case GUI_INPUT_WITHDRAWBALANCE:
+            printf(
+                "\033[1;33m\n"
+                "                                        █ █ ▀█▀ ▀█▀ █ █ █▀▄ █▀▄ █▀█ █ █   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀              \n"
+                "                                        █▄█  █   █  █▀█ █ █ █▀▄ █▀█ █▄█   █▀▄ █▀█ █   █▀█ █ █ █   █▀▀              \n"
+                "                                        ▀ ▀ ▀▀▀  ▀  ▀ ▀ ▀▀  ▀ ▀ ▀ ▀ ▀ ▀   ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀              \n"
+                "\033[0m\n"
+            );
+            break;
+        case GUI_INPUT_DEPOSITBALANCE:
+            printf(
+                "\033[1;33m\n"
+                "                                        █▀▄ █▀▀ █▀█ █▀█ █▀▀ ▀█▀ ▀█▀   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                  \n"
+                "                                        █ █ █▀▀ █▀▀ █ █ ▀▀█  █   █    █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                  \n"
+                "                                        ▀▀  ▀▀▀ ▀   ▀▀▀ ▀▀▀ ▀▀▀  ▀    ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                  \n"
+                "\033[0m\n"
+            );
             break;
         default :
             break;

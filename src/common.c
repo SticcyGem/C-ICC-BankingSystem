@@ -27,6 +27,7 @@ int userInput(const char *fmt, void *var) {
     LOGGER();
     char buffer[256];
 
+
     if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
         buffer[strcspn(buffer, "\n")] = '\0';
 

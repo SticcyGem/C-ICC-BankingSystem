@@ -72,7 +72,7 @@ void initializeAcc(Account *acc) {
     }
 
     strcpy(acc->password, "");
-    strcpy(acc->firstname, "Emmanuel");
+    strcpy(acc->firstname, "");
     strcpy(acc->lastname, "");
     strcpy(acc->midname, "");
     strcpy(acc->street, "");
@@ -174,15 +174,10 @@ void accDelete(Account *acc, AccountBackup*accb) {
 void accEditName(Account *acc, AccountBackup*accb) {
     LOGGER();
     guiAccEditName(acc);
+
     guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME);
-
-    printf("Editing Last Name (press Enter to skip): ");
-    userInput("%s", acc->lastname);
-    LOG_STRUCT_CHANGE_STR("Last Name", accb->lastname, acc->lastname);
-
-    printf("Editing Middle Name (press Enter to skip): ");
-    userInput("%s", acc->midname);
-    LOG_STRUCT_CHANGE_STR("Middle Name", accb->midname, acc->midname);
+    guiStringInput(acc, accb, GUI_INPUT_LASTNAME);
+    guiStringInput(acc, accb, GUI_INPUT_MIDNAME);
 
     initializeAccBackupFromAccount(accb, acc);
 }

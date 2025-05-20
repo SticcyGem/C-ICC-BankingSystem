@@ -56,6 +56,13 @@ int main() {
                 break;
         }
     }
+    while (1) {
+        if (!isAuth) {
+            handleAuthMenu(&isAuth, &currentAcc, &currentAccb);
+        } else {
+            handleMainMenu(&isAuth, &currentAcc, &currentAccb, &currentTrans);
+        }
+    }
     return 0;
 }
 // -------------------- AUTHENTICATION FUNCTIONS --------------------
