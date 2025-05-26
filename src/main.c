@@ -77,6 +77,7 @@ void handleAuthMenu(Account *acc, Account *accb, int *isAuth) {
                 *isAuth = 1;
             } else {
                 LOG("Log in Failed.");
+                *isAuth = 0;
             }
             break;
         case MENU_AUTH_SIGNUP:
@@ -86,6 +87,7 @@ void handleAuthMenu(Account *acc, Account *accb, int *isAuth) {
                 *isAuth = 1;
             } else {
                 LOG("Sign Up Failed.");
+                *isAuth = 0;
             }
             break;
         case MENU_AUTH_CREDITS:

@@ -411,7 +411,7 @@ int guiStringInput(Account *acc, Account *accb, int choice){
     LOGGER();
     int loop = 1;
     switch (choice){
-        case GUI_INPUT_ACCOUNTNUMBER:
+        case GUI_INPUT_ACCOUNTNUMBER_LOGIN:
             LOG("Using Account Number Input GUI");
 
             int genAccNum = getNextAccountNumber("data/Accounts.txt");
@@ -463,7 +463,7 @@ int guiStringInput(Account *acc, Account *accb, int choice){
                 break;
             }
             break;
-        case GUI_INPUT_PASSWORD_SIGNIN:
+        case GUI_INPUT_PASSWORD_SIGNUP:
             LOG("Using Password Input GUI");
             char pass[50];
             char confirmPass[50];
@@ -523,7 +523,7 @@ int guiStringInput(Account *acc, Account *accb, int choice){
                 "\033[1A\r\033[1A\r\033[1A\r\033[1A\r\033[1A\r                               >   \033[1;33m "
             );
             while (loop){
-                int result = userInput("%s", pass);
+                int result = userInput("%s", confirmPass);
                 if (result == -1) {
                     LOG("Esc key pressed. Exiting Account Number Input.");
                     printf("\033[0m");

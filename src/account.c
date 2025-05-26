@@ -152,11 +152,11 @@ int accLogin(Account *acc, Account*accb) {
 int accSignup(Account *acc, Account *accb) {
     LOGGER();
     guiAccSignup();
-    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_LOGIN)) {
         LOG("Operation canceled by user.\n");
         return 0;
     }
-    guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNIN);
+    guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP);
     return 1;
 }
 
