@@ -520,7 +520,7 @@ int guiStringInput(Account *acc, Account *accb, int choice){
             );
             printf(
                 "                                                                                                                     \n"
-                "\033[1A\r\033[1A\r\033[1A\r\033[1A\r\033[1A\r                               >   \033[1;33m "
+                "\033[1A\r\033[1A\r\033[1A\r\033[1A\r                               >   \033[1;33m "
             );
             while (loop){
                 int result = userInput("%s", confirmPass);

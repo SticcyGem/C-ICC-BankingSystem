@@ -153,10 +153,13 @@ int accSignup(Account *acc, Account *accb) {
     LOGGER();
     guiAccSignup();
     if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_LOGIN)) {
-        LOG("Operation canceled by user.\n");
+        LOG("Operation canceled by user. [Account Number Sign Up\n");
         return 0;
     }
-    guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP);
+    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP)) {
+        LOG("Operation canceled by user. [Password Sign Up]\n");
+        return 0;
+    }
     return 1;
 }
 
