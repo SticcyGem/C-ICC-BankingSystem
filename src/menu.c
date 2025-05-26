@@ -80,7 +80,7 @@ void guiCredit(){
         "-> CANARIA, Raine Dominique P.  | Account: Inquiry, Deposit, Withdraw    | Github: rdc-hdg           \n"
         "-> DATU, Trixia Kyle M.         | Account: Update, Delete                | Github: kyxia-dt          \n"
         "-> UNDAG, Matthew James C.      | Database: Manipulation                 | Github: Mattjamesss       \n"
-        "-> DICKINSON, Jedrick C.        | Doccumentation                         | Github:                   \n"
+        "-> DICKINSON, Jedrick C.        | Doccumentation                         | Github: Jediyx            \n"
         "\n"
     );
     Sleep(3000);
@@ -309,42 +309,255 @@ void guiAccBalance(const Account *acc) {
     pauseConsole();
 }
 
-void guiAccDeposit(const Account *acc, float amount) {
+void guiAccSignup() {
     system("cls");
     LOGGER();
-    printf("╔══════════════════════════════╗\n");
-    printf("║       ACCOUNT DEPOSIT        ║\n");
-    printf("╚══════════════════════════════╝\n");
-    printf("Account Number  : %d\n", acc->accountNumber);
-    printf("Previous Balance: ₱%.2f\n", acc->balance - amount);
-    printf("Amount Deposited: ₱%.2f\n", amount);
-    printf("------------------------------\n");
-    printf("New Balance     : ₱%.2f\n", acc->balance);
-    pauseConsole();
+    printf(
+        "\n"
+        "                                  ███████ ██  ██████  ███    ██     ██    ██ ██████                                  \n"
+        "                                  ██      ██ ██       ████   ██     ██    ██ ██   ██                                 \n"
+        "                                  ███████ ██ ██   ███ ██ ██  ██     ██    ██ ██████                                  \n"
+        "                                       ██ ██ ██    ██ ██  ██ ██     ██    ██ ██                                      \n"
+        "                                  ███████ ██  ██████  ██   ████      ██████  ██                                      \n"
+        "\n\n\n"
+    );
 }
 
-void guiAccWithdraw(const Account *acc, float amount) {
+void guiAccLogin() {
     system("cls");
     LOGGER();
-    printf("╔══════════════════════════════╗\n");
-    printf("║      ACCOUNT WITHDRAWAL      ║\n");
-    printf("╚══════════════════════════════╝\n");
-    printf("Account Number  : %d\n", acc->accountNumber);
-    printf("Previous Balance: ₱%.2f\n", acc->balance + amount);
-    printf("Amount Withdrawn: ₱%.2f\n", amount);
-    printf("------------------------------\n");
-    printf("New Balance     : ₱%.2f\n", acc->balance);
-    pauseConsole();
+    printf(
+        "\n"
+        "                                     ██       ██████   ██████      ██ ███    ██                                     \n"
+        "                                     ██      ██    ██ ██           ██ ████   ██                                     \n"
+        "                                     ██      ██    ██ ██   ███     ██ ██ ██  ██                                     \n"
+        "                                     ██      ██    ██ ██    ██     ██ ██  ██ ██                                     \n"
+        "                                     ███████  ██████   ██████      ██ ██   ████                                     \n"
+        "\n\n\n"
+    );
 }
 
-void guiStringInput(Account *acc, AccountBackup *accb, char choice){
+void guiAccDeposit() {
+    system("cls");
     LOGGER();
+    printf(
+        "\n"
+        "                                 ██████  ███████ ██████   ██████  ███████ ██ ████████                                \n"
+        "                                 ██   ██ ██      ██   ██ ██    ██ ██      ██    ██                                   \n"
+        "                                 ██   ██ █████   ██████  ██    ██ ███████ ██    ██                                   \n"
+        "                                 ██   ██ ██      ██      ██    ██      ██ ██    ██                                   \n"
+        "                                 ██████  ███████ ██       ██████  ███████ ██    ██                                   \n"
+        "\n\n\n"
+    );
+}
+
+void guiAccWithdraw() {
+    system("cls");
+    LOGGER();
+    printf(
+        "\n"
+        "                           ██     ██ ██ ████████ ██   ██ ██████  ██████   █████  ██     ██                           \n"
+        "                           ██     ██ ██    ██    ██   ██ ██   ██ ██   ██ ██   ██ ██     ██                           \n"
+        "                           ██  █  ██ ██    ██    ███████ ██   ██ ██████  ███████ ██  █  ██                           \n"
+        "                           ██ ███ ██ ██    ██    ██   ██ ██   ██ ██   ██ ██   ██ ██ ███ ██                           \n"
+        "                            ███ ███  ██    ██    ██   ██ ██████  ██   ██ ██   ██  ███ ███                            \n"
+        "\n\n\n"
+    );
+}
+
+void guiAccEditName() {
+    system("cls");
+    LOGGER();
+    printf(
+        "\n"
+        "                         ███████ ██████  ██ ████████     ███    ██  █████  ███    ███ ███████                        \n"
+        "                         ██      ██   ██ ██    ██        ████   ██ ██   ██ ████  ████ ██                             \n"
+        "                         █████   ██   ██ ██    ██        ██ ██  ██ ███████ ██ ████ ██ █████                          \n"
+        "                         ██      ██   ██ ██    ██        ██  ██ ██ ██   ██ ██  ██  ██ ██                             \n"
+        "                         ███████ ██████  ██    ██        ██   ████ ██   ██ ██      ██ ███████                        \n"
+        "\n\n\n"
+    );
+}
+
+void guiAccEditAddress() {
+    system("cls");
+    LOGGER();
+    printf(
+        "\n"
+        "               ███████ ██████  ██ ████████      █████  ██████  ██████  ██████  ███████ ███████ ███████               \n"
+        "               ██      ██   ██ ██    ██        ██   ██ ██   ██ ██   ██ ██   ██ ██      ██      ██                    \n"
+        "               █████   ██   ██ ██    ██        ███████ ██   ██ ██   ██ ██████  █████   ███████ ███████               \n"
+        "               ██      ██   ██ ██    ██        ██   ██ ██   ██ ██   ██ ██   ██ ██           ██      ██               \n"
+        "               ███████ ██████  ██    ██        ██   ██ ██████  ██████  ██   ██ ███████ ███████ ███████               \n"
+        "\n\n\n"
+    );
+}
+
+void guiAccEditPassword() {
+    system("cls");
+    LOGGER();
+    printf(
+        "\n"
+        "         ███████ ██████  ██ ████████     ██████   █████  ███████ ███████ ██     ██  ██████  ██████  ██████           \n"
+        "         ██      ██   ██ ██    ██        ██   ██ ██   ██ ██      ██      ██     ██ ██    ██ ██   ██ ██   ██          \n"
+        "         █████   ██   ██ ██    ██        ██████  ███████ ███████ ███████ ██  █  ██ ██    ██ ██████  ██   ██          \n"
+        "         ██      ██   ██ ██    ██        ██      ██   ██      ██      ██ ██ ███ ██ ██    ██ ██   ██ ██   ██          \n"
+        "         ███████ ██████  ██    ██        ██      ██   ██ ███████ ███████  ███ ███   ██████  ██   ██ ██████           \n"
+        "\n\n\n"
+    );
+}
+
+int guiStringInput(Account *acc, Account *accb, int choice){
+    LOGGER();
+    int loop = 1;
     switch (choice){
         case GUI_INPUT_ACCOUNTNUMBER:
+            LOG("Using Account Number Input GUI");
+
+            int genAccNum = getNextAccountNumber("data/Accounts.txt");
+            int accNum;
+
+            printf(
+                "                                              Your Account ID Is: \033[1;33m%d\033[0m\n"
+                "                                Remember it! You will need it to access your account.                                \n"
+                "\n"
+                "                                         Enter your Account ID to continue...                                        \n"
+                "\n"
+                "\033[1;33m\n"
+                "                                         █▀█ █▀▀ █▀▀ █▀█ █ █ █▀█ ▀█▀   ▀█▀ █▀▄                                       \n"
+                "                                         █▀█ █   █   █ █ █ █ █ █  █     █  █ █                                       \n"
+                "                                         ▀ ▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀  ▀    ▀▀▀ ▀▀                                        \n"
+                "\033[0m\n", genAccNum
+            );
+            printf("                               >   \033[1;33m ");
+            while (loop) {
+                int result = userInput("%d", &accNum);
+                if (result == -1) {
+                    LOG("Esc key pressed. Exiting Account Number Input.");
+                    printf("\033[0m");
+                    return 0;
+                }
+                if (!result) {
+                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
+                    printf(
+                        "\033[1A\r\033[1A\r                                                                                                                     "
+                        "\033[1G\033[0m                               >   \033[1;33m "
+                    );
+                    fflush(stdout);
+                    continue;
+                }
+        
+                if (accNum != genAccNum) {
+                    printf("\n\n                               \033[31m Account ID does not match. Please try again.                    \033[0m");
+                    printf(
+                        "\033[1A\r\033[1A\r                                                                                                                     "
+                        "\033[1G\033[0m                               >   \033[1;33m "
+                    );
+                    fflush(stdout);
+                    continue;
+                }
+
+                acc->accountNumber = genAccNum;
+                LOG_STRUCT_CHANGE_VAL("Account Number", accb->accountNumber, acc->accountNumber);
+                
+                break;
+            }
             break;
-        case GUI_INPUT_PASSWORD:
+        case GUI_INPUT_PASSWORD_SIGNIN:
+            LOG("Using Password Input GUI");
+            char pass[50];
+            char confirmPass[50];
+            printf(
+                "                                                                                                                     \033[1;33m\n"
+                "                                           █▀█ █▀█ █▀▀ █▀▀ █ █ █▀█ █▀▄ █▀▄                                           \n"
+                "                                           █▀▀ █▀█ ▀▀█ ▀▀█ █▄█ █ █ █▀▄ █ █                                           \n"
+                "                                           ▀   ▀ ▀ ▀▀▀ ▀▀▀ ▀ ▀ ▀▀▀ ▀ ▀ ▀▀                                            \n"
+                "\033[0m\n"
+            );
+            printf("                               >   \033[1;33m ");
+            while (loop) {
+                int result = userInput("%s", pass);
+                if (result == -1) {
+                    LOG("Esc key pressed. Exiting Account Number Input.");
+                    printf("\033[0m");
+                    return 0;
+                }
+                
+                if (!result) {
+                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
+                    printf(
+                        "\033[1A\r\033[1A\r                                                                                                                     "
+                        "\033[1G\033[0m                               >   \033[1;33m "
+                    );
+                    fflush(stdout);
+                    continue;
+                }
+        
+                if (strlen(pass) < 6) {
+                    printf("\n\n                               \033[31m Password must be at least 6 characters long.                    \033[0m");
+                    printf(
+                        "\033[1A\r\033[1A\r                                                                                                                     "
+                        "\033[1G\033[0m                               >   \033[1;33m "
+                    );
+                    fflush(stdout);
+                    continue;
+                } else {
+                    break;
+                }
+                
+            }
+            printf(
+                "\033[1A\r\033[1A\r\033[1A\r\033[1A\r\033[1A\r\033[1A\r"
+                "\033[1;33m\n\n"
+                "                            █▀▀ █▀█ █▀█ █▀▀ ▀█▀ █▀▄ █▄█   █▀█ █▀█ █▀▀ █▀▀ █ █ █▀█ █▀▄ █▀▄                            \n"
+                "                            █   █ █ █ █ █▀▀  █  █▀▄ █ █   █▀▀ █▀█ ▀▀█ ▀▀█ █▄█ █ █ █▀▄ █ █                            \n"
+                "                            ▀▀▀ ▀▀▀ ▀ ▀ ▀   ▀▀▀ ▀ ▀ ▀ ▀   ▀   ▀ ▀ ▀▀▀ ▀▀▀ ▀ ▀ ▀▀▀ ▀ ▀ ▀▀                             \n"
+                "                                                                                                                     \n"
+                "                                                                                                                     \n"
+                "                                                                                                                     \n"
+                "                                                                                                                     \n"
+                "\033[0m"
+            );
+            printf(
+                "                                                                                                                     \n"
+                "\033[1A\r\033[1A\r\033[1A\r\033[1A\r\033[1A\r                               >   \033[1;33m "
+            );
+            while (loop){
+                int result = userInput("%s", pass);
+                if (result == -1) {
+                    LOG("Esc key pressed. Exiting Account Number Input.");
+                    printf("\033[0m");
+                    return 0;
+                }
+                if (!result) {
+                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
+                    printf(
+                        "\033[1A\r\033[1A\r                                                                                                                     "
+                        "\033[1G\033[0m                               >   \033[1;33m "
+                    );
+                    fflush(stdout);
+                    continue;
+                } 
+                
+                if (strcmp(pass, confirmPass) != 0) {
+                    printf("\n\n                               \033[31m Password does not match. Please try again.                      \033[0m");
+                    printf(
+                        "\033[1A\r\033[1A\r                                                                                                                     "
+                        "\033[1G\033[0m                               >   \033[1;33m "
+                    );
+                    fflush(stdout);
+                    continue;
+                }
+                
+                else {
+                    strcpy(acc->password, pass);
+                    LOG_STRUCT_CHANGE_STR("Password", accb->password, acc->password);
+                    break;
+                }
+            }
             break;
         case GUI_INPUT_FIRSTNAME:
+            LOG("Using First Name Input GUI");
             printf(
                 "\033[1;33m\n"
                 "                                        █▀▀ ▀█▀ █▀▄ █▀▀ ▀█▀   █▀█ █▀█ █▄█ █▀▀                                        \n"
@@ -360,6 +573,7 @@ void guiStringInput(Account *acc, AccountBackup *accb, char choice){
             LOG_STRUCT_CHANGE_STR("First Name", accb->firstname, acc->firstname);
             break;
         case GUI_INPUT_LASTNAME:
+            LOG("Using Last Name Input GUI");
             printf(
                 "\033[1;33m\n"
                 "                                          █   █▀█ █▀▀ ▀█▀   █▀█ █▀█ █▄█ █▀▀                                          \n"
@@ -375,6 +589,7 @@ void guiStringInput(Account *acc, AccountBackup *accb, char choice){
             LOG_STRUCT_CHANGE_STR("Last Name", accb->lastname, acc->lastname);
             break;
         case GUI_INPUT_MIDNAME:
+            LOG("Using Middle Name Input GUI");
             printf(
                 "\033[1;33m\n"
                 "                                      █▄█ ▀█▀ █▀▄ █▀▄ █   █▀▀   █▀█ █▀█ █▄█ █▀▀                                      \n"
@@ -390,6 +605,7 @@ void guiStringInput(Account *acc, AccountBackup *accb, char choice){
             LOG_STRUCT_CHANGE_STR("Middle Name", accb->midname, acc->midname);
             break;
         case GUI_INPUT_STREET:
+            LOG("Using Street Input GUI");
             printf(
                 "\033[1;33m\n"
                 "                                               █▀▀ ▀█▀ █▀▄ █▀▀ █▀▀ ▀█▀                                               \n"
@@ -397,133 +613,126 @@ void guiStringInput(Account *acc, AccountBackup *accb, char choice){
                 "                                               ▀▀▀  ▀  ▀ ▀ ▀▀▀ ▀▀▀  ▀                                                \n"
                 "\033[0m\n"
             );
+            printf("      %49s   ->   \033[1;33m", accb->street);
+            if (!userInput("%s", acc->street)) {
+                printf("\033[1A\r\033[0m      %49s   ->   \033[1;33m%s", accb->street, accb->street);
+                fflush(stdout);
+            }
+            LOG_STRUCT_CHANGE_STR("First Name", accb->street, acc->street);
             break;
         case GUI_INPUT_BARANGAY:
+            LOG("Using Barangay Input GUI");
             printf(
                 "\033[1;33m\n"
-                "                                        █▀▄ █▀█ █▀▄ █▀█ █▀█ █▀▀ █▀█ █ █                                            \n"
-                "                                        █▀▄ █▀█ █▀▄ █▀█ █ █ █ █ █▀█  █                                             \n"
-                "                                        ▀▀  ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀ ▀  ▀                                             \n"
+                "                                           █▀▄ █▀█ █▀▄ █▀█ █▀█ █▀▀ █▀█ █ █                                           \n"
+                "                                           █▀▄ █▀█ █▀▄ █▀█ █ █ █ █ █▀█  █                                            \n"
+                "                                           ▀▀  ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀ ▀  ▀                                            \n"
                 "\033[0m\n"
             );
+            printf("      %49s   ->   \033[1;33m", accb->barangay);
+            if (!userInput("%s", acc->barangay)) {
+                printf("\033[1A\r\033[0m      %49s   ->   \033[1;33m%s", accb->barangay, accb->barangay);
+                fflush(stdout);
+            }
+            LOG_STRUCT_CHANGE_STR("First Name", accb->barangay, acc->barangay);
             break;
         case GUI_INPUT_CITY:
+            LOG("Using City Input GUI");
             printf(
                 "\033[1;33m\n"
-                "                                        █▀▀ ▀█▀ ▀█▀ █ █                                                            \n"
-                "                                        █    █   █   █                                                             \n"
-                "                                        ▀▀▀ ▀▀▀  ▀   ▀                                                             \n"
+                "                                                   █▀▀ ▀█▀ ▀█▀ █ █                                                   \n"
+                "                                                   █    █   █   █                                                    \n"
+                "                                                   ▀▀▀ ▀▀▀  ▀   ▀                                                    \n"
                 "\033[0m\n"
             );
+            printf("      %49s   ->   \033[1;33m", accb->city);
+            if (!userInput("%s", acc->city)) {
+                printf("\033[1A\r\033[0m      %49s   ->   \033[1;33m%s", accb->city, accb->city);
+                fflush(stdout);
+            }
+            LOG_STRUCT_CHANGE_STR("First Name", accb->city, acc->city);
             break;
         case GUI_INPUT_REGION:
+            LOG("Using Region Input GUI");
             printf(
                 "\033[1;33m\n"
-                "                                        █▀▄ █▀▀ █▀▀ ▀█▀ █▀█ █▀█                                                    \n"
-                "                                        █▀▄ █▀▀ █ █  █  █ █ █ █                                                    \n"
-                "                                        ▀ ▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀                                                    \n"
+                "                                               █▀▄ █▀▀ █▀▀ ▀█▀ █▀█ █▀█                                               \n"
+                "                                               █▀▄ █▀▀ █ █  █  █ █ █ █                                               \n"
+                "                                               ▀ ▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀                                               \n"
                 "\033[0m\n"
             );
+            printf("      %49s   ->   \033[1;33m", accb->region);
+            if (!userInput("%s", acc->region)) {
+                printf("\033[1A\r\033[0m      %49s   ->   \033[1;33m%s", accb->region, accb->region);
+                fflush(stdout);
+            }
+            LOG_STRUCT_CHANGE_STR("First Name", accb->region, acc->region);
             break;
         case GUI_INPUT_POSTALCODE:
+            LOG("Using Postal Code Input GUI");
             printf(
                 "\033[1;33m\n"
-                "                                        █▀█ █▀█ █▀▀ ▀█▀ █▀█ █     █▀▀ █▀█ █▀▄ █▀▀                                  \n"
-                "                                        █▀▀ █ █ ▀▀█  █  █▀█ █     █   █ █ █ █ █▀▀                                  \n"
-                "                                        ▀   ▀▀▀ ▀▀▀  ▀  ▀ ▀ ▀▀▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀                                  \n"
+                "                                      █▀█ █▀█ █▀▀ ▀█▀ █▀█ █     █▀▀ █▀█ █▀▄ █▀▀                                     \n"
+                "                                      █▀▀ █ █ ▀▀█  █  █▀█ █     █   █ █ █ █ █▀▀                                     \n"
+                "                                      ▀   ▀▀▀ ▀▀▀  ▀  ▀ ▀ ▀▀▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀                                     \n"
                 "\033[0m\n"
             );
+            printf("      %49s   ->   \033[1;33m", accb->postalCode);
+            if (!userInput("%s", acc->postalCode)) {
+                printf("\033[1A\r\033[0m      %49s   ->   \033[1;33m%s", accb->postalCode, accb->postalCode);
+                fflush(stdout);
+            }
+            LOG_STRUCT_CHANGE_STR("First Name", accb->postalCode, acc->postalCode);
             break;
         case GUI_INPUT_WITHDRAWBALANCE:
+            LOG("Using Withdraw Input GUI");
             printf(
                 "\033[1;33m\n"
-                "                                        █ █ ▀█▀ ▀█▀ █ █ █▀▄ █▀▄ █▀█ █ █   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀              \n"
-                "                                        █▄█  █   █  █▀█ █ █ █▀▄ █▀█ █▄█   █▀▄ █▀█ █   █▀█ █ █ █   █▀▀              \n"
-                "                                        ▀ ▀ ▀▀▀  ▀  ▀ ▀ ▀▀  ▀ ▀ ▀ ▀ ▀ ▀   ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀              \n"
+                "                            █ █ ▀█▀ ▀█▀ █ █ █▀▄ █▀▄ █▀█ █ █   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                           \n"
+                "                            █▄█  █   █  █▀█ █ █ █▀▄ █▀█ █▄█   █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                           \n"
+                "                            ▀ ▀ ▀▀▀  ▀  ▀ ▀ ▀▀  ▀ ▀ ▀ ▀ ▀ ▀   ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                           \n"
                 "\033[0m\n"
             );
             break;
         case GUI_INPUT_DEPOSITBALANCE:
+            LOG("Using Deposit Input GUI");
+            float deposit = 0.0f;
             printf(
                 "\033[1;33m\n"
-                "                                        █▀▄ █▀▀ █▀█ █▀█ █▀▀ ▀█▀ ▀█▀   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                  \n"
-                "                                        █ █ █▀▀ █▀▀ █ █ ▀▀█  █   █    █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                  \n"
-                "                                        ▀▀  ▀▀▀ ▀   ▀▀▀ ▀▀▀ ▀▀▀  ▀    ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                  \n"
+                "                              █▀▄ █▀▀ █▀█ █▀█ █▀▀ ▀█▀ ▀█▀   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                             \n"
+                "                              █ █ █▀▀ █▀▀ █ █ ▀▀█  █   █    █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                             \n"
+                "                              ▀▀  ▀▀▀ ▀   ▀▀▀ ▀▀▀ ▀▀▀  ▀    ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                             \n"
                 "\033[0m\n"
             );
+            printf("                               >   \033[1;33mPHP: ");
+            while (loop){
+                if (!userInput("%f", &deposit)) {
+                    printf("                               >   \033[1;33m%s", "Skipped! No deposit made.");
+                    fflush(stdout);
+                    break;
+                } else if (deposit < 0) {
+                    printf("\n                               \033[31m Invalid deposit amount. Please enter a positive value. \033[0m");
+                    printf(
+                        "\033[1A\r\033[1A\r                                                                                                                     "
+                        "\033[1G\033[0m                               >   \033[1;33mPHP: "
+                    );
+                    fflush(stdout);
+                    deposit = 0.0f;
+                    continue;
+                } else {
+                    acc->balance += deposit;
+                    LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
+                    LOG("Deposited: %.2f", deposit);
+                    break;
+                }
+            }
             break;
         default :
+            LOG("Input GUI not Declared Properly, Skipping...");
             break;
     }
     printf("\033[0m\n");
-}
-
-void guiAccEditName(const Account *acc) {
-    system("cls");
-    LOGGER();
-    printf(
-        "\n"
-        "                         ███████ ██████  ██ ████████     ███    ██  █████  ███    ███ ███████                        \n"
-        "                         ██      ██   ██ ██    ██        ████   ██ ██   ██ ████  ████ ██                             \n"
-        "                         █████   ██   ██ ██    ██        ██ ██  ██ ███████ ██ ████ ██ █████                          \n"
-        "                         ██      ██   ██ ██    ██        ██  ██ ██ ██   ██ ██  ██  ██ ██                             \n"
-        "                         ███████ ██████  ██    ██        ██   ████ ██   ██ ██      ██ ███████                        \n"
-        "\n\n\n"
-    );
-}
-
-void guiAccEditAddress(const Account *acc) {
-    system("cls");
-    LOGGER();
-    printf(
-        "\n"
-        "               ███████ ██████  ██ ████████      █████  ██████  ██████  ██████  ███████ ███████ ███████               \n"
-        "               ██      ██   ██ ██    ██        ██   ██ ██   ██ ██   ██ ██   ██ ██      ██      ██                    \n"
-        "               █████   ██   ██ ██    ██        ███████ ██   ██ ██   ██ ██████  █████   ███████ ███████               \n"
-        "               ██      ██   ██ ██    ██        ██   ██ ██   ██ ██   ██ ██   ██ ██           ██      ██               \n"
-        "               ███████ ██████  ██    ██        ██   ██ ██████  ██████  ██   ██ ███████ ███████ ███████               \n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-    );
-}
-
-void guiAccEditPassword(const Account *acc) {
-    system("cls");
-    LOGGER();
-    printf(
-        "\n"
-        "         ███████ ██████  ██ ████████     ██████   █████  ███████ ███████ ██     ██  ██████  ██████  ██████           \n"
-        "         ██      ██   ██ ██    ██        ██   ██ ██   ██ ██      ██      ██     ██ ██    ██ ██   ██ ██   ██          \n"
-        "         █████   ██   ██ ██    ██        ██████  ███████ ███████ ███████ ██  █  ██ ██    ██ ██████  ██   ██          \n"
-        "         ██      ██   ██ ██    ██        ██      ██   ██      ██      ██ ██ ███ ██ ██    ██ ██   ██ ██   ██          \n"
-        "         ███████ ██████  ██    ██        ██      ██   ██ ███████ ███████  ███ ███   ██████  ██   ██ ██████           \n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-    );
+    return 1;
 }
 
 void guiAccStatement(const Account *acc, const Transaction *trans) {
@@ -532,8 +741,7 @@ void guiAccStatement(const Account *acc, const Transaction *trans) {
     if (trans != NULL) {
         printf("Recent Transaction:\n");
         printf("Date: %s\n", trans->date);
-
-        // Convert transactionType from int to string
+        
         const char *typeStr = (trans->transactionType == 0) ? "Deposit" :
                               (trans->transactionType == 1) ? "Withdraw" : "Unknown";
 

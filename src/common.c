@@ -15,6 +15,14 @@
 
 #include "lib/bankinglib.h"
 
+void pauseConsole() {
+    LOGGER();
+    printf("\nPress ENTER to continue...");
+    while (_kbhit()) getch();
+    char ch = getch();
+    LOG_KEY_INPUT(ch);
+}
+
 char menuInput() {
     LOGGER();
     while (_kbhit()) getch();
@@ -26,47 +34,75 @@ char menuInput() {
 int userInput(const char *fmt, void *var) {
     LOGGER();
     char buffer[256];
+    char sanitizedBuffer[256];
+    int index = 0;
 
+    while (1) {
+        char ch = _getch(); // Get a single character input
 
-    if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
-        buffer[strcspn(buffer, "\n")] = '\0';
+        // Detect Esc key
+        if (ch == 27) { // ASCII code for Esc
+            LOG("Esc key detected.");
+            return -1;
+        }
 
-        if (buffer[0] == '\0') {
-            if (INPUT_DEBUG) {
-                LOG("No input provided.");
+        // Detect Enter key
+        if (ch == '\r') { // Carriage return (Enter key)
+            buffer[index] = '\0'; // Null-terminate the string
+            break;
+        }
+
+        // Handle Backspace
+        if (ch == '\b') {
+            if (index > 0) { // Only process backspace if there is input
+                printf("\b \b"); // Remove the last character from the console
+                index--;
+            } else {
+                // Ignore Backspace
             }
-            return 0;
+            continue;
         }
 
-        if (strcmp(fmt, "%d") == 0) {
-            *(int *)var = atoi(buffer);
-        } else if (strcmp(fmt, "%f") == 0) {
-            *(float *)var = atof(buffer);
-        } else if (strcmp(fmt, "%s") == 0) {
-            strncpy((char *)var, buffer, 49);
-            ((char *)var)[49] = '\0';
-        } else {
-            LOG("Unsupported format: '%s'", fmt);
-            return 0;
+        if (index < sizeof(buffer) - 1) {
+            buffer[index++] = ch;
+            printf("%c", ch);
         }
+    }
 
+    // If the input is empty
+    if (index == 0) {
         if (INPUT_DEBUG) {
-            LOG("Scanned input: format='%s', value='%s'", fmt, buffer);
+            LOG("No input provided.");
         }
-
-        return 1;
-    } else {
-        LOG("Error reading input");
         return 0;
     }
-}
 
-void pauseConsole() {
-    LOGGER();
-    printf("\nPress ENTER to continue...");
-    while (_kbhit()) getch();
-    char ch = getch();
-    LOG_KEY_INPUT(ch);
+    // Sanitize the Input
+    int j = 0;
+    for (int i = 0; buffer[i] != '\0'; i++) {
+        if (buffer[i] != ',') {
+            sanitizedBuffer[j++] = buffer[i];
+        }
+    }
+    sanitizedBuffer[j] = '\0';
+
+    if (strcmp(fmt, "%d") == 0) {
+        *(int *)var = atoi(sanitizedBuffer);
+    } else if (strcmp(fmt, "%f") == 0) {
+        *(float *)var = atof(sanitizedBuffer);
+    } else if (strcmp(fmt, "%s") == 0) {
+        strncpy((char *)var, sanitizedBuffer, 49);
+        ((char *)var)[49] = '\0';
+    } else {
+        LOG("Unsupported format: '%s'", fmt);
+        return 0;
+    }
+
+    if (INPUT_DEBUG) {
+        LOG("Scanned input: format='%s', sanitized value='%s'", fmt, sanitizedBuffer);
+    }
+
+    return 1;
 }
 
 int fileExists(const char *filename) {
@@ -78,7 +114,7 @@ int fileExists(const char *filename) {
     return 0;
 }
 
-void example1(Account *acc, AccountBackup *accb) {
+void example1(Account *acc, Account *accb) {
     LOGGER();
 
     char choice;
@@ -121,7 +157,7 @@ void example1(Account *acc, AccountBackup *accb) {
                 }
                 break;
             } else if (mode == '2') {
-                initializeAccBackupFromAccount(accb, acc);
+                initializeAccBackupFromAccount(acc, accb);
 
                 acc->accountNumber = getNextAccountNumber(EXAMPLE_ACC_FILE);
                 printf("Hardcoded Initialization for Sign Up (Check Logs)\n\n");
@@ -139,7 +175,7 @@ void example1(Account *acc, AccountBackup *accb) {
                 acc->balance = 1000.50f;
                 LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
 
-                initializeAccBackupFromAccount(accb, acc);
+                initializeAccBackupFromAccount(acc, accb);
                 example3(acc, EXAMPLE_ACC_FILE);
                 break;
             } else {
@@ -161,7 +197,7 @@ void example1(Account *acc, AccountBackup *accb) {
         userInput("%s", acc->midname);
         LOG_STRUCT_CHANGE_STR("Middle Name", accb->midname, acc->midname);
 
-        initializeAccBackupFromAccount(accb, acc);
+        initializeAccBackupFromAccount(acc, accb);
 
         // Simulate user deposit
         float deposit = 0.0f;

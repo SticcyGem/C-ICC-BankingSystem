@@ -5,14 +5,12 @@
 static char sessionLogFilename[256] = "";
 static int logFileInitialized = 0;
 
-// === Implementation of write_log ===
 void write_log(const char *ansi_color, const char *fmt, ...) {
     static char history_filename[64] = "";
     static int is_history_initialized = 0;
 
-    _mkdir("log");  // Create "log" folder if it doesn't exist
+    _mkdir("log");
 
-    // === Initialize history file name only once
     if (!is_history_initialized) {
         time_t t = time(NULL);
         struct tm *tm_info = localtime(&t);
@@ -20,31 +18,25 @@ void write_log(const char *ansi_color, const char *fmt, ...) {
         is_history_initialized = 1;
     }
 
-    // Open main log file (with color)
     FILE *f = fopen(DEBUG_LOG_FILE, "a");
     if (!f) return;
 
-    // Open history log file (no color)
     FILE *h = fopen(history_filename, "a");
     if (!h) {
         fclose(f);
         return;
     }
 
-    // Get current timestamp
     time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
     char time_buf[20];
     strftime(time_buf, sizeof(time_buf), "%Y-%m-%d %H:%M:%S", tm_info);
 
-    // Write timestamp to both files
     fprintf(f, "[%s] ", time_buf);
     fprintf(h, "[%s] ", time_buf);
 
-    // Color goes to main log only
     fprintf(f, "%s", ansi_color);
 
-    // Handle variable arguments
     va_list args1, args2;
     va_start(args1, fmt);
     va_copy(args2, args1);
@@ -55,7 +47,6 @@ void write_log(const char *ansi_color, const char *fmt, ...) {
     va_end(args1);
     va_end(args2);
 
-    // Finish lines
     fprintf(f, "%s\n", ANSI_COLOR_RESET);
     fprintf(h, "\n");
 
@@ -63,19 +54,16 @@ void write_log(const char *ansi_color, const char *fmt, ...) {
     fclose(h);
 }
 
-// === LOG_COLOR that only logs to file ===
 void LOG_COLOR(const char *ansi_color, const char *fmt, ...) {
     FILE *f = fopen(DEBUG_LOG_FILE, "a");
     if (!f) return;
 
-    // Write timestamp
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
     char time_buf[20];
     strftime(time_buf, sizeof(time_buf), "%Y-%m-%d %H:%M:%S", tm_info);
     fprintf(f, "[%s] ", time_buf);
 
-    // Write color code to log file
     fprintf(f, "%s", ansi_color);
 
     va_list args;

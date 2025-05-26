@@ -25,10 +25,10 @@ int main() {
     system("chcp 65001 > nul");
 
     Account currentAcc;
-    AccountBackup currentAccb;
+    Account backupAcc;
     Transaction currentTrans;
     initializeAcc(&currentAcc);
-    initializeAccBackupFromAccount(&currentAccb, &currentAcc);
+    initializeAccBackupFromAccount(&currentAcc, &backupAcc);
     initializeTrans(&currentTrans);
     int isAuth = 0;
     while (DEBUG) {
@@ -41,15 +41,15 @@ int main() {
                 LOG("Selected: Normal Mode");
                 while (1) {
                     if (!isAuth) {
-                        handleAuthMenu(&isAuth, &currentAcc, &currentAccb);
+                        handleAuthMenu(&currentAcc, &backupAcc, &isAuth);
                     } else {
-                        handleMainMenu(&isAuth, &currentAcc, &currentAccb, &currentTrans);
+                        handleMainMenu(&currentAcc, &backupAcc, &currentTrans, &isAuth);
                     }
                 }
                 break;
             case MENU_STARTUP_DEBUG:
                 LOG("Selected: Debug Mode");
-                example1(&currentAcc, &currentAccb);
+                example1(&currentAcc, &backupAcc);
                 break;
             default:
                 LOG("Selected: Invalid Choice");
@@ -58,15 +58,15 @@ int main() {
     }
     while (1) {
         if (!isAuth) {
-            handleAuthMenu(&isAuth, &currentAcc, &currentAccb);
+            handleAuthMenu(&currentAcc, &backupAcc, &isAuth);
         } else {
-            handleMainMenu(&isAuth, &currentAcc, &currentAccb, &currentTrans);
+            handleMainMenu(&currentAcc, &backupAcc, &currentTrans, &isAuth);
         }
     }
     return 0;
 }
 // -------------------- AUTHENTICATION FUNCTIONS --------------------
-void handleAuthMenu(int *isAuth, Account *acc, AccountBackup *accb) {
+void handleAuthMenu(Account *acc, Account *accb, int *isAuth) {
     guiAuthMenu();
     char choice = menuInput();
     switch (choice) {
@@ -102,7 +102,7 @@ void handleAuthMenu(int *isAuth, Account *acc, AccountBackup *accb) {
 }
 
 // -------------------- MAIN MENU FUNCTIONS --------------------
-void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction *trans) {
+void handleMainMenu(Account *acc, Account *accb, Transaction *trans, int *isAuth) {
     int loop = 1;
     while (loop){
         guiMainMenu(acc);
@@ -122,7 +122,10 @@ void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction 
                 break;
             case MENU_MAIN_SETTINGS:
                 LOG("Selected: Account Setting");
-                handleSettingsMenu(acc, accb);
+                handleSettingsMenu(acc, accb, isAuth);
+                if (*isAuth == 0) {
+                    loop = 0;
+                }
                 break;
             case MENU_MAIN_LOGOUT:
                 LOG("Selected: Log Out");
@@ -137,7 +140,7 @@ void handleMainMenu(int *isAuth, Account *acc, AccountBackup *accb, Transaction 
 }
 
 // -------------------- INQUIRY MENU FUNCTIONS --------------------
-void handleInquiryMenu(const Account *acc, AccountBackup *accb, const Transaction *trans) {
+void handleInquiryMenu(const Account *acc, Account *accb, const Transaction *trans) {
     int loop = 1;
     while (loop){
         guiAccInquiryMenu();
@@ -163,7 +166,7 @@ void handleInquiryMenu(const Account *acc, AccountBackup *accb, const Transactio
 }
 
 // -------------------- SETTINGS MENU FUNCTIONS --------------------
-void handleSettingsMenu(Account *acc, AccountBackup *accb) {
+void handleSettingsMenu(Account *acc, Account *accb, int *isAuth) {
     int loop = 1;
     while (loop) {
         guiAccSettingMenu();
@@ -179,7 +182,10 @@ void handleSettingsMenu(Account *acc, AccountBackup *accb) {
                 break;
             case '3':
                 LOG("Selected: Delete Account");
-                handleDeleteMenu(acc, accb);
+                handleDeleteMenu(acc, accb, isAuth);
+                if (*isAuth == 0) {
+                    loop = 0;
+                }
                 break;
             case '4':
                 LOG("Selected: Back");
@@ -193,7 +199,7 @@ void handleSettingsMenu(Account *acc, AccountBackup *accb) {
 }
 
 // -------------------- EDIT MENU FUNCTIONS --------------------
-void handleEditMenu(Account *acc, AccountBackup *accb) {
+void handleEditMenu(Account *acc, Account *accb) {
     int loop = 1;
     while (loop) {
         guiAccEditingMenu();
@@ -223,7 +229,7 @@ void handleEditMenu(Account *acc, AccountBackup *accb) {
 }
 
 // -------------------- DELETE MENU FUNCTIONS --------------------
-void handleDeleteMenu(Account *acc, AccountBackup *accb) {
+void handleDeleteMenu(Account *acc, Account *accb, int *isAuth) {
     int loop = 1;
     while (loop) {
         guiAccDeleteMenu();
@@ -237,6 +243,7 @@ void handleDeleteMenu(Account *acc, AccountBackup *accb) {
                 LOG("Selected: Yes - Delete Account");
                 accDelete(acc, accb);
                 loop = 0;
+                *isAuth = 0;
                 break;
             default:
                 LOG("Selected: Invalid Choice");

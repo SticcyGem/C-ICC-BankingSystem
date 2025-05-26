@@ -15,24 +15,25 @@
 
 #include "lib/bankinglib.h"
 
-void transDeposit(Account *acc, AccountBackup *accb, Transaction *trans) {
+void transDeposit(Account *acc, Account *accb, Transaction *trans) {
     LOGGER();
-    float depositAmmount = 0;
-    guiAccDeposit(acc, depositAmmount);
+    guiAccDeposit();
+    guiStringInput(acc, accb, GUI_INPUT_DEPOSITBALANCE);
+    pauseConsole();
 }
 
-void transWithdraw(Account *acc, AccountBackup *accb, Transaction *trans) {
+void transWithdraw(Account *acc, Account *accb, Transaction *trans) {
     LOGGER();
     float withdrawAmmount = 0;
     guiAccWithdraw(acc, withdrawAmmount);
 }
 
-void transBalance(const Account *acc, AccountBackup *accb) {
+void transBalance(const Account *acc, Account *accb) {
     LOGGER();
     guiAccBalance(acc);
 }
 
-void transStatement(const Account *acc, AccountBackup *accb, const Transaction *trans) {
+void transStatement(const Account *acc, Account *accb, const Transaction *trans) {
     LOGGER();
     guiAccStatement(acc, trans);
 }
