@@ -8,7 +8,7 @@
 #include <stdarg.h>
 
 // === Toggle Flags ===
-#define DEBUG 1         // Set 0 to disable debug logs
+#define DEBUG 0         // Set 0 to disable debug logs
 #define INPUT_DEBUG 1   // Set 0 to disable key input logs
 
 // === ANSI Escape Codes for Colors ===

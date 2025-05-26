@@ -51,16 +51,21 @@ int loadAccountByNumber(Account *acc, Account *accb, int accountNumber, const ch
         LOG_ERROR("Failed to open file to load: %s", filename);
         return 0;
     }
+
     Account temp;
     int found = 0;
+
     while (fread(&temp, sizeof(Account), 1, file) == 1) {
         if (temp.accountNumber == accountNumber) {
 
+            if (strcmp(accb->password, temp.password) != 0) {
+                LOG_WARN("Password mismatch for account number %d.", accountNumber);
+                fclose(file);
+                return 0;
+            }
+
             if (accb->accountNumber != temp.accountNumber) {
                 LOG_FILE_RETRIEVED_VAL("accountNumber", accb->accountNumber, temp.accountNumber);
-            }
-            if (strcmp(accb->password, temp.password) != 0) {
-                LOG_FILE_RETRIEVED_STR("password", accb->password, temp.password);
             }
             if (strcmp(accb->firstname, temp.firstname) != 0) {
                 LOG_FILE_RETRIEVED_STR("firstname", accb->firstname, temp.firstname);
@@ -99,19 +104,21 @@ int loadAccountByNumber(Account *acc, Account *accb, int accountNumber, const ch
             break;
         }
     }
+
     fclose(file);
 
     if (!found) {
         LOG_WARN("Account number %d not found in file.", accountNumber);
-        printf("Account number %d not found in file.\n", accountNumber);
         return 0;
-    } else {
-        return 1;
     }
+
+    return 1;
 }
 
 int saveOrUpdateAccount(Account *acc, Account *accb, const char *filename) {
     LOGGER();
+    Account tempAcc;
+
     FILE *file = fopen(filename, "rb");
     if (!file) {
         LOG_WARN("Account file not found, creating new one: %s", filename);
@@ -132,31 +139,30 @@ int saveOrUpdateAccount(Account *acc, Account *accb, const char *filename) {
     }
 
     int found = 0;
-    while (fread(accb, sizeof(Account), 1, file) == 1) {
-        if (accb->toDelete == 1) {
-            LOG("Skipping account %d marked for deletion.", accb->accountNumber);
+    while (fread(&tempAcc, sizeof(Account), 1, file) == 1) {
+        if (tempAcc.toDelete == 1) {
+            LOG("Skipping account %d marked for deletion.", tempAcc.accountNumber);
             continue;
         }
 
-        if (accb->accountNumber == acc->accountNumber && !found) {
+        if (tempAcc.accountNumber == acc->accountNumber && !found) {
             if (acc->toDelete == 1) {
-                LOG("Skipping updated account %d marked for deletion.", acc->accountNumber);
+                LOG("Account %d marked for deletion. It will no longer be saved.", acc->accountNumber);
                 found = 1;
                 continue;
             }
-
-            LOG_FILE_CHANGE_VAL("accountNumber", accb->accountNumber, acc->accountNumber);
-            LOG_FILE_CHANGE_STR("password", accb->password, acc->password);
-            LOG_FILE_CHANGE_STR("firstname", accb->firstname, acc->firstname);
-            LOG_FILE_CHANGE_STR("lastname", accb->lastname, acc->lastname);
-            LOG_FILE_CHANGE_STR("midname", accb->midname, acc->midname);
-            LOG_FILE_CHANGE_STR("street", accb->street, acc->street);
-            LOG_FILE_CHANGE_STR("barangay", accb->barangay, acc->barangay);
-            LOG_FILE_CHANGE_STR("city", accb->city, acc->city);
-            LOG_FILE_CHANGE_STR("region", accb->region, acc->region);
-            LOG_FILE_CHANGE_STR("postalCode", accb->postalCode, acc->postalCode);
-            LOG_FILE_CHANGE_VAL("balance", accb->balance, acc->balance);
-            LOG_FILE_CHANGE_VAL("toDelete", accb->toDelete, acc->toDelete);
+            LOG_FILE_CHANGE_VAL("accountNumber", tempAcc.accountNumber, acc->accountNumber);
+            LOG_FILE_CHANGE_STR("password", tempAcc.password, acc->password);
+            LOG_FILE_CHANGE_STR("firstname", tempAcc.firstname, acc->firstname);
+            LOG_FILE_CHANGE_STR("lastname", tempAcc.lastname, acc->lastname);
+            LOG_FILE_CHANGE_STR("midname", tempAcc.midname, acc->midname);
+            LOG_FILE_CHANGE_STR("street", tempAcc.street, acc->street);
+            LOG_FILE_CHANGE_STR("barangay", tempAcc.barangay, acc->barangay);
+            LOG_FILE_CHANGE_STR("city", tempAcc.city, acc->city);
+            LOG_FILE_CHANGE_STR("region", tempAcc.region, acc->region);
+            LOG_FILE_CHANGE_STR("postalCode", tempAcc.postalCode, acc->postalCode);
+            LOG_FILE_CHANGE_VAL("balance", tempAcc.balance, acc->balance);
+            LOG_FILE_CHANGE_VAL("toDelete", tempAcc.toDelete, acc->toDelete);
 
             size_t written = fwrite(acc, sizeof(Account), 1, temp);
             if (written != 1) {
@@ -166,7 +172,7 @@ int saveOrUpdateAccount(Account *acc, Account *accb, const char *filename) {
             }
             found = 1;
         } else {
-            fwrite(accb, sizeof(Account), 1, temp);
+            fwrite(&tempAcc, sizeof(Account), 1, temp);
         }
     }
 

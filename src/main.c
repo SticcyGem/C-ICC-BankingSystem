@@ -27,7 +27,7 @@ int main() {
     Account currentAcc;
     Account backupAcc;
     Transaction currentTrans;
-    initializeAcc(&currentAcc);
+    initializeAcc(&currentAcc, &backupAcc);
     initializeAccBackupFromAccount(&currentAcc, &backupAcc);
     initializeTrans(&currentTrans);
     int isAuth = 0;
@@ -72,7 +72,7 @@ void handleAuthMenu(Account *acc, Account *accb, int *isAuth) {
     switch (choice) {
         case MENU_AUTH_LOGIN:
             LOG("Selected: Log In");
-            if (accLogin(acc, accb) == 1) {
+            if (accLogin(acc, accb, isAuth) == 1) {
                 LOG("Log in Successful.");
                 *isAuth = 1;
             } else {
@@ -81,7 +81,7 @@ void handleAuthMenu(Account *acc, Account *accb, int *isAuth) {
             break;
         case MENU_AUTH_SIGNUP:
             LOG("Selected: Sign Up");
-            if (accSignup(acc, accb) == 1) {
+            if (accSignup(acc, accb, isAuth) == 1) {
                 LOG("Sign Up Successful.");
                 *isAuth = 1;
             } else {
@@ -114,11 +114,11 @@ void handleMainMenu(Account *acc, Account *accb, Transaction *trans, int *isAuth
                 break;
             case MENU_MAIN_DEPOSIT:
                 LOG("Selected: Deposit");
-                transDeposit(acc, accb, trans);
+                transDeposit(acc, accb, trans, isAuth);
                 break;
             case MENU_MAIN_WITHDRAW:
                 LOG("Selected: Withdraw");
-                transWithdraw(acc, accb, trans);
+                transWithdraw(acc, accb, trans, isAuth);
                 break;
             case MENU_MAIN_SETTINGS:
                 LOG("Selected: Account Setting");
@@ -129,6 +129,7 @@ void handleMainMenu(Account *acc, Account *accb, Transaction *trans, int *isAuth
                 break;
             case MENU_MAIN_LOGOUT:
                 LOG("Selected: Log Out");
+                accLogout(acc, accb);
                 *isAuth = 0;
                 loop = 0;
                 break;
@@ -178,7 +179,7 @@ void handleSettingsMenu(Account *acc, Account *accb, int *isAuth) {
                 break;
             case '2':
                 LOG("Selected: Edit Account Details");
-                handleEditMenu(acc, accb);
+                handleEditMenu(acc, accb, isAuth);
                 break;
             case '3':
                 LOG("Selected: Delete Account");
@@ -199,7 +200,7 @@ void handleSettingsMenu(Account *acc, Account *accb, int *isAuth) {
 }
 
 // -------------------- EDIT MENU FUNCTIONS --------------------
-void handleEditMenu(Account *acc, Account *accb) {
+void handleEditMenu(Account *acc, Account *accb, int *isAuth) {
     int loop = 1;
     while (loop) {
         guiAccEditingMenu();
@@ -207,15 +208,15 @@ void handleEditMenu(Account *acc, Account *accb) {
         switch (choice) {
             case '1':
                 LOG("Selected: Edit Name");
-                accEditName(acc, accb);
+                accEditName(acc, accb, isAuth);
                 break;
             case '2':
                 LOG("Selected: Edit Address");
-                accEditAddress(acc, accb);
+                accEditAddress(acc, accb, isAuth);
                 break;
             case '3':
                 LOG("Selected: Edit Password");
-                accEditPassword(acc, accb);
+                accEditPassword(acc, accb, isAuth);
                 break;
             case '4':
                 LOG("Selected: Back");

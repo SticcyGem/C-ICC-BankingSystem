@@ -6,6 +6,7 @@
 #include <conio.h>
 #include <string.h>
 #include <windows.h>
+#include <math.h>
 #include "debug.h"
 
 #define ACC_FILE   "Account.txt"
@@ -76,21 +77,21 @@ void handleAuthMenu(Account *acc, Account *accb, int *isAuth);
 void handleMainMenu(Account *acc, Account *accb, Transaction *trans, int *isAuth);
 void handleInquiryMenu(const Account *acc, Account *accb, const Transaction *trans);
 void handleSettingsMenu(Account *acc, Account *accb, int *isAuth);
-void handleEditMenu(Account *acc, Account *accb);
+void handleEditMenu(Account *acc, Account *accb, int *isAuth);
 void handleDeleteMenu(Account *acc, Account *accb, int *isAuth);
 
 // account.c
-void initializeAcc(Account *acc);
+void initializeAcc(Account *acc, Account *accb);
 void initializeAccBackupFromAccount(const Account *acc, Account *accb);
 void initializeTrans(Transaction* tran);
 int getNextAccountNumber(const char *filename);
-int accLogin(Account *acc, Account *accb);
-int accSignup(Account *acc, Account *accb);
+int accLogin(Account *acc, Account *accb, int *isAuth);
+int accSignup(Account *acc, Account *accb, int *isAuth);
 void accLogout(Account *acc, Account *accb);
 void accDelete(Account *acc, Account *accb);
-void accEditName(Account *acc, Account *accb);
-void accEditAddress(Account *acc, Account *accb);
-void accEditPassword(Account *acc, Account *accb);
+void accEditName(Account *acc, Account *accb, int *isAuth);
+void accEditAddress(Account *acc, Account *accb, int *isAuth);
+void accEditPassword(Account *acc, Account *accb, int *isAuth);
 void accDisplay(const Account *acc);
 void transDisplay(const Transaction *trans);
 
@@ -125,7 +126,7 @@ void guiAccBalance(const Account *acc);
 void guiAccDeposit();
 void guiAccSignup();
 void guiAccWithdraw();
-int guiStringInput(Account *acc, Account *accb, int choice);
+int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth);
 void guiAccEditName();
 void guiAccEditAddress();
 void guiAccEditPassword();
@@ -133,9 +134,13 @@ void guiAccStatement(const Account *acc, const Transaction *trans);
 void guiDEBUG();
 
 // transaction.c
-void transDeposit(Account *acc, Account *accb, Transaction *trans);
-void transWithdraw(Account *acc, Account *accb, Transaction *trans);
+void transDeposit(Account *acc, Account *accb, Transaction *trans, int *isAuth);
+void transWithdraw(Account *acc, Account *accb, Transaction *trans, int *isAuth);
 void transBalance(const Account *acc, Account *accb);
 void transStatement(const Account *acc, Account *accb, const Transaction *trans);
 
+
+
+void guiAuthenticatedInput(const char *label, char *oldValue, char *newValue);
+int guiSignUpInput(const char *label, char* oldValue, char* newValue);
 #endif // BANKINGLIB_H

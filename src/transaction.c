@@ -15,17 +15,24 @@
 
 #include "lib/bankinglib.h"
 
-void transDeposit(Account *acc, Account *accb, Transaction *trans) {
+void transDeposit(Account *acc, Account *accb, Transaction *trans, int *isAuth) {
     LOGGER();
     guiAccDeposit();
-    guiStringInput(acc, accb, GUI_INPUT_DEPOSITBALANCE);
+    if (!guiStringInput(acc, accb, GUI_INPUT_DEPOSITBALANCE, isAuth)) {
+        LOG("Operation canceled by user. [Account Deposit Balance\n");
+        return;
+    }
     pauseConsole();
 }
 
-void transWithdraw(Account *acc, Account *accb, Transaction *trans) {
+void transWithdraw(Account *acc, Account *accb, Transaction *trans, int *isAuth) {
     LOGGER();
-    float withdrawAmmount = 0;
-    guiAccWithdraw(acc, withdrawAmmount);
+    guiAccWithdraw();
+    if (!guiStringInput(acc, accb, GUI_INPUT_WITHDRAWBALANCE, isAuth)) {
+        LOG("Operation canceled by user. [Account Withdraw Balance\n");
+        return;
+    }
+    pauseConsole();
 }
 
 void transBalance(const Account *acc, Account *accb) {

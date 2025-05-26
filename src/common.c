@@ -17,7 +17,7 @@
 
 void pauseConsole() {
     LOGGER();
-    printf("\nPress ENTER to continue...");
+    printf("\n                                              > Press \033[1;33mENTER\033[0m to continue <                                   \n");
     while (_kbhit()) getch();
     char ch = getch();
     LOG_KEY_INPUT(ch);
@@ -38,54 +38,56 @@ int userInput(const char *fmt, void *var) {
     int index = 0;
 
     while (1) {
-        char ch = _getch(); // Get a single character input
+        char ch = _getch();
 
-        // Detect Esc key
-        if (ch == 27) { // ASCII code for Esc
+        if (ch == 0 || ch == 224) {
+            ch = _getch();
+            LOG("Arrow/special key ignored: %d", ch);
+            continue;
+        }
+
+        // Esc key
+        if (ch == 27) {
             LOG("Esc key detected.");
             return -1;
         }
 
-        // Detect Enter key
-        if (ch == '\r') { // Carriage return (Enter key)
-            buffer[index] = '\0'; // Null-terminate the string
+        // Enter
+        if (ch == '\r') {
+            buffer[index] = '\0';
             break;
         }
 
-        // Handle Backspace
+        // Backspace
         if (ch == '\b') {
-            if (index > 0) { // Only process backspace if there is input
-                printf("\b \b"); // Remove the last character from the console
+            if (index > 0) {
+                printf("\b \b");
                 index--;
-            } else {
-                // Ignore Backspace
             }
             continue;
         }
 
-        if (index < sizeof(buffer) - 1) {
+        if (isprint(ch) && index < sizeof(buffer) - 1) {
             buffer[index++] = ch;
-            printf("%c", ch);
+            putchar(ch);
         }
     }
 
-    // If the input is empty
     if (index == 0) {
-        if (INPUT_DEBUG) {
-            LOG("No input provided.");
-        }
+        LOG("No input provided.");
         return 0;
     }
 
-    // Sanitize the Input
+    // Remove commas
     int j = 0;
-    for (int i = 0; buffer[i] != '\0'; i++) {
+    for (int i = 0; buffer[i]; i++) {
         if (buffer[i] != ',') {
             sanitizedBuffer[j++] = buffer[i];
         }
     }
     sanitizedBuffer[j] = '\0';
 
+    // Format handling
     if (strcmp(fmt, "%d") == 0) {
         *(int *)var = atoi(sanitizedBuffer);
     } else if (strcmp(fmt, "%f") == 0) {
@@ -98,12 +100,10 @@ int userInput(const char *fmt, void *var) {
         return 0;
     }
 
-    if (INPUT_DEBUG) {
-        LOG("Scanned input: format='%s', sanitized value='%s'", fmt, sanitizedBuffer);
-    }
-
+    LOG("Scanned input: format='%s', sanitized='%s'", fmt, sanitizedBuffer);
     return 1;
 }
+
 
 int fileExists(const char *filename) {
     FILE *file = fopen(filename, "rb");
@@ -224,7 +224,7 @@ void example1(Account *acc, Account *accb) {
 
         // Simulate logout (clear struct)
         printf("Logging out...\n");
-        initializeAcc(acc);
+        initializeAcc(acc, accb);
         pauseConsole();
 
         printf("Do you want to repeat? (y/n): ");

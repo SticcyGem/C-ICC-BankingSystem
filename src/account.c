@@ -17,70 +17,62 @@
 
 #include "lib/bankinglib.h"
 
-void initializeAcc(Account *acc) {
+void initializeAcc(Account *acc, Account *accb) {
     LOGGER();
 
-    Account oldAcc = *acc;
-
+    if (accb->accountNumber != 0) {
+        LOG_STRUCT_CHANGE_VAL("accountNumber", accb->accountNumber, 0);
+    }
     acc->accountNumber = 0;
-    if (oldAcc.accountNumber != 0) {
-        LOG_STRUCT_CHANGE_VAL("accountNumber", oldAcc.accountNumber, 0);
-    }
 
-    if (strcmp(oldAcc.password, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("password", oldAcc.password, "");
+    if (strcmp(accb->firstname, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("firstname", accb->firstname, "");
     }
-
-    if (strcmp(oldAcc.firstname, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("firstname", oldAcc.firstname, "");
-    }
-
-    if (strcmp(oldAcc.lastname, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("lastname", oldAcc.lastname, "");
-    }
-
-    if (strcmp(oldAcc.midname, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("midname", oldAcc.midname, "");
-    }
-
-    if (strcmp(oldAcc.street, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("street", oldAcc.street, "");
-    }
-
-    if (strcmp(oldAcc.barangay, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("barangay", oldAcc.barangay, "");
-    }
-
-    if (strcmp(oldAcc.city, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("city", oldAcc.city, "");
-    }
-
-    if (strcmp(oldAcc.region, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("region", oldAcc.region, "");
-    }
-
-    if (strcmp(oldAcc.postalCode, "") != 0) {
-        LOG_STRUCT_CHANGE_STR("postalCode", oldAcc.postalCode, "");
-    }
-
-    if (oldAcc.balance != 0.0f) {
-        LOG_STRUCT_CHANGE_VAL("balance", oldAcc.balance, 0.0f);
-    }
-
-    if (oldAcc.toDelete != 0) {
-        LOG_STRUCT_CHANGE_VAL("toDelete", oldAcc.toDelete, 0);
-    }
-
-    strcpy(acc->password, "");
     strcpy(acc->firstname, "");
+
+    if (strcmp(accb->lastname, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("lastname", accb->lastname, "");
+    }
     strcpy(acc->lastname, "");
+
+    if (strcmp(accb->midname, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("midname", accb->midname, "");
+    }
     strcpy(acc->midname, "");
+
+    if (strcmp(accb->street, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("street", accb->street, "");
+    }
     strcpy(acc->street, "");
+
+    if (strcmp(accb->barangay, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("barangay", accb->barangay, "");
+    }
     strcpy(acc->barangay, "");
+
+    if (strcmp(accb->city, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("city", accb->city, "");
+    }
     strcpy(acc->city, "");
+
+    if (strcmp(accb->region, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("region", accb->region, "");
+    }
     strcpy(acc->region, "");
+
+    if (strcmp(accb->postalCode, "") != 0) {
+        LOG_STRUCT_CHANGE_STR("postalCode", accb->postalCode, "");
+    }
     strcpy(acc->postalCode, "");
+
+    if (accb->balance != 0.0f) {
+        LOG_STRUCT_CHANGE_VAL("balance", accb->balance, 0.0f);
+    }
     acc->balance = 0.0f;
+
+    if (accb->toDelete != 0) {
+        LOG_STRUCT_CHANGE_VAL("toDelete", accb->toDelete, 0);
+    }
     acc->toDelete = 0;
 }
 
@@ -143,29 +135,79 @@ int getNextAccountNumber(const char *filename) {
     return maxAccNum + 1;
 }
 
-int accLogin(Account *acc, Account*accb) {
+int accLogin(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
+    guiAccLogin();
 
+    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_LOGIN, isAuth)) {
+        LOG("Operation canceled by user. [Account Number Log In]");
+        guiAccLoginFailed();
+        return 0;
+    }
+
+    if (!loadAccountByNumber(acc, accb, accb->accountNumber, "data/Account.txt")) {
+        LOG("Invalid credentials.");
+        guiAccLoginFailed();
+        return 0;
+    }
+
+    initializeAccBackupFromAccount(acc, accb);
     return 1;
 }
 
-int accSignup(Account *acc, Account *accb) {
+int accSignup(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccSignup();
-    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_LOGIN)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_SIGNUP, isAuth)) {
         LOG("Operation canceled by user. [Account Number Sign Up\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth)) {
         LOG("Operation canceled by user. [Password Sign Up]\n");
         return 0;
     }
+    if (!guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth)) {
+        LOG("Operation canceled by user. [First Name Sign Up]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth)) {
+        LOG("Operation canceled by user. [Last Name Sign Up]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth)) {
+        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth)) {
+        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth)) {
+        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth)) {
+        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth)) {
+        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth)) {
+        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+        return 0;
+    }
+
+    initializeAccBackupFromAccount(acc, accb);
+    saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    pauseConsole();
     return 1;
 }
 
 void accLogout(Account *acc, Account *accb) {
     LOGGER();
-    initializeAcc(acc);
+    initializeAcc(acc, accb);
     initializeAccBackupFromAccount(acc, accb);
     LOG("Account logged out successfully.");
 }
@@ -178,33 +220,38 @@ void accDelete(Account *acc, Account *accb) {
     LOGGER();
 }
 
-void accEditName(Account *acc, Account *accb) {
+void accEditName(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditName();
 
-    guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME);
-    guiStringInput(acc, accb, GUI_INPUT_LASTNAME);
-    guiStringInput(acc, accb, GUI_INPUT_MIDNAME);
-    
-    initializeAccBackupFromAccount(acc, accb);
+    guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth);
+    guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth);
+    guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth);
+
     saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    pauseConsole();
 }
 
-void accEditAddress(Account *acc, Account *accb) {
+void accEditAddress(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditAddress();
 
-    guiStringInput(acc, accb, GUI_INPUT_STREET);
-    guiStringInput(acc, accb, GUI_INPUT_BARANGAY);
-    guiStringInput(acc, accb, GUI_INPUT_CITY);
-    guiStringInput(acc, accb, GUI_INPUT_REGION);
-    guiStringInput(acc, accb, GUI_INPUT_POSTALCODE);
+    guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth);
+    guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth);
+    guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth);
+    guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth);
+    guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth);
 
-    initializeAccBackupFromAccount(acc, accb);
+    saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    pauseConsole();
 }
     
-void accEditPassword(Account *acc, Account *accb) {
+void accEditPassword(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
+    guiAccEditPassword();
+    guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth);
+
+    saveOrUpdateAccount(acc, accb, "data/Account.txt");
 }
 
 void accDisplay(const Account *acc) {
