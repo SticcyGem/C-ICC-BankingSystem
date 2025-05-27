@@ -56,7 +56,7 @@ void handleAuthMenu(Account *acc, Account *accb, int *isAuth) {
     switch (choice) {
         case MENU_AUTH_LOGIN:
             LOG("Selected: Log In");
-            if (accLogin(acc, accb, isAuth) == 1) {
+            if (accLogin(acc, accb) == 1) {
                 LOG("Log in Successful.");
                 *isAuth = 1;
             } else {

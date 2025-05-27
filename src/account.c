@@ -135,11 +135,11 @@ int getNextAccountNumber(const char *filename) {
     return maxAccNum + 1;
 }
 
-int accLogin(Account *acc, Account *accb, int *isAuth) {
+int accLogin(Account *acc, Account *accb) {
     LOGGER();
     guiAccLogin();
 
-    if (!guiHandleAccLogin(acc, accb)) {
+    if (!guiHandleAccLogin(accb)) {
         LOG("Operation canceled by user. [Account Number Log In]");
         guiAccLoginFailed();
         return 0;
@@ -164,10 +164,6 @@ int accSignup(Account *acc, Account *accb, int *isAuth) {
     }
     if (!guiHandlePassSignup(acc, accb)) {
         LOG("Operation canceled by user. [Password Sign Up]");
-        return 0;
-    }
-    if (!guiHandleField("First Name", accb->firstname, acc->firstname, isAuth, guiAccFirstName, 1)) {
-        LOG("Operation canceled by user. [First Name Sign Up]");
         return 0;
     }
     if (!guiHandleField("First Name", accb->firstname, acc->firstname, isAuth, guiAccFirstName, 1)) {
@@ -286,14 +282,18 @@ int accEditAddress(Account *acc, Account *accb, int *isAuth) {
 }
     
 int accEditPassword(Account *acc, Account *accb, int *isAuth) {
-    LOGGER();
-    guiAccEditPassword();
-    if (!guiHandlePassSignup(acc, accb)) {
-        LOG("Operation canceled by user. [Password Editing]\n");
+    if (*isAuth){
+        guiAccEditPassword();
+        if (!guiHandlePassSignup(acc, accb)) {
+            LOG("Operation canceled by user. [Password Editing]\n");
+            return 0;
+        }
+        saveOrUpdateAccount(acc, "data/Account.txt");
+        return 1;
+    } else{
+        LOG("User Not Authenticated! Exiting...");
         return 0;
     }
-    saveOrUpdateAccount(acc, "data/Account.txt");
-    return 1;
 }
 
 void accDisplay(const Account *acc) {

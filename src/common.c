@@ -19,7 +19,7 @@
 
 void pauseConsole() {
     LOGGER();
-    printf("\n                                                > Press \033[1;33mENTER\033[0m to continue <                                   \n");
+    printf("\n\n                                                > Press \033[1;33mENTER\033[0m to continue <                                   \n");
     while (_kbhit()) getch();
     char ch = getch();
     LOG_KEY_INPUT(ch);

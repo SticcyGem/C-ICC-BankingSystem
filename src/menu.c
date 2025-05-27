@@ -89,6 +89,7 @@ void guiAuthMenu(){
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "\n"
         "\n"
@@ -124,6 +125,7 @@ void guiMainMenu(const Account *acc){
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                          ███    ███  █████  ██ ███    ██     ███    ███ ███████ ███    ██ ██    ██                    \n"
         "                          ████  ████ ██   ██ ██ ████   ██     ████  ████ ██      ████   ██ ██    ██                    \n"
@@ -161,6 +163,7 @@ void guiAccSettingMenu(){
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                   █████   ██████  ██████        ███████ ███████ ████████ ████████ ██ ███    ██  ██████                \n"
         "                  ██   ██ ██      ██             ██      ██         ██       ██    ██ ████   ██ ██                     \n"
@@ -196,6 +199,7 @@ void guiAccEditingMenu(){
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                      █████   ██████  ██████        ███████ ██████  ██ ████████ ██ ███    ██  ██████                   \n"
         "                     ██   ██ ██      ██             ██      ██   ██ ██    ██    ██ ████   ██ ██                        \n"
@@ -266,6 +270,7 @@ void guiAccInquiryMenu(){
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                      █████   ██████  ██████        ██ ███    ██  ██████  ██    ██ ██ ██████  ██    ██                 \n"
         "                     ██   ██ ██      ██             ██ ████   ██ ██    ██ ██    ██ ██ ██   ██  ██  ██                  \n"
@@ -289,34 +294,6 @@ void guiAccInquiryMenu(){
         "                     ░█▀░░▀▀█░▀█░░░░█▀▄░█▀█░█▀▀░█░█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                 \n"
         "                     ░█░░░░▀▄░░█░░░░█▀▄░█▀█░█░░░█▀▄░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                 \n"
         "                     ░▀▀░░▀▀░░▀▀░░░░▀▀░░▀░▀░▀▀▀░▀░▀░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                 \n"
-    );
-}
-
-void guiDEBUG(){
-    system("cls");
-    LOGGER();
-    printf(
-        "                                                                                                                       \n"
-        "                            ██████  ███████ ██████  ██    ██  ██████          ██████  ███    ██                        \n"
-        "                            ██   ██ ██      ██   ██ ██    ██ ██       ██     ██    ██ ████   ██                        \n"
-        "                            ██   ██ █████   ██████  ██    ██ ██   ███        ██    ██ ██ ██  ██                        \n"
-        "                            ██   ██ ██      ██   ██ ██    ██ ██    ██ ██     ██    ██ ██  ██ ██                        \n"
-        "                            ██████  ███████ ██████   ██████   ██████          ██████  ██   ████                        \n"
-        "                                                                                                                       \n"
-        "                                           █▀▀ █ █ █▀▀ █▀▀ █ █   █   █▀█ █▀▀ █▀▀                                       \n"
-        "                                           █   █▀█ █▀▀ █   █▀▄   █   █ █ █ █ ▀▀█                                       \n"
-        "                                           ▀▀▀ ▀ ▀ ▀▀▀ ▀▀▀ ▀ ▀   ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀                                       \n"
-        "                                                                                                                       \n"
-        "                                                                                                                       \n"
-        "                                                                                                                       \n"
-        "                                 ░█▀░░▀█░░▀█░░░░█▀█░█▀█░█▀▄░█▄█░█▀█░█░░░░░█▄█░█▀█░█▀▄░█▀▀░                             \n"
-        "                                 ░█░░░░█░░░█░░░░█░█░█░█░█▀▄░█░█░█▀█░█░░░░░█░█░█░█░█░█░█▀▀░                             \n"
-        "                                 ░▀▀░░▀▀▀░▀▀░░░░▀░▀░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░                             \n"
-        "                                                                                                                       \n"
-        "                                 ░█▀░░▀▀▄░▀█░░░░█▀▄░█▀▀░█▀▄░█░█░█▀▀░░░█▄█░█▀█░█▀▄░█▀▀░░░░░                             \n"
-        "                                 ░█░░░▄▀░░░█░░░░█░█░█▀▀░█▀▄░█░█░█░█░░░█░█░█░█░█░█░█▀▀░░░░░                             \n"
-        "                                 ░▀▀░░▀▀▀░▀▀░░░░▀▀░░▀▀▀░▀▀░░▀▀▀░▀▀▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░░░░░                             \n"
-        "                                                                                                                       \n"
     );
 }
 
@@ -399,6 +376,7 @@ void guiAccSignup() {
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                                    ███████ ██  ██████  ███    ██     ██    ██ ██████                                  \n"
         "                                    ██      ██ ██       ████   ██     ██    ██ ██   ██                                 \n"
@@ -413,6 +391,7 @@ void guiAccLogin() {
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                                       ██       ██████   ██████      ██ ███    ██                                     \n"
         "                                       ██      ██    ██ ██           ██ ████   ██                                     \n"
@@ -427,6 +406,7 @@ void guiAccDeposit() {
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                                   ██████  ███████ ██████   ██████  ███████ ██ ████████                                \n"
         "                                   ██   ██ ██      ██   ██ ██    ██ ██      ██    ██                                   \n"
@@ -441,6 +421,7 @@ void guiAccWithdraw() {
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                             ██     ██ ██ ████████ ██   ██ ██████  ██████   █████  ██     ██                           \n"
         "                             ██     ██ ██    ██    ██   ██ ██   ██ ██   ██ ██   ██ ██     ██                           \n"
@@ -455,6 +436,7 @@ void guiAccEditName() {
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                           ███████ ██████  ██ ████████     ███    ██  █████  ███    ███ ███████                        \n"
         "                           ██      ██   ██ ██    ██        ████   ██ ██   ██ ████  ████ ██                             \n"
@@ -469,6 +451,7 @@ void guiAccEditAddress() {
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "                 ███████ ██████  ██ ████████      █████  ██████  ██████  ██████  ███████ ███████ ███████               \n"
         "                 ██      ██   ██ ██    ██        ██   ██ ██   ██ ██   ██ ██   ██ ██      ██      ██                    \n"
@@ -483,6 +466,7 @@ void guiAccEditPassword() {
     system("cls");
     LOGGER();
     printf(
+        "\033[0m"
         "\n"
         "           ███████ ██████  ██ ████████     ██████   █████  ███████ ███████ ██     ██  ██████  ██████  ██████           \n"
         "           ██      ██   ██ ██    ██        ██   ██ ██   ██ ██      ██      ██     ██ ██    ██ ██   ██ ██   ██          \n"
@@ -569,7 +553,7 @@ void guiAccCPass(){
 
 void guiAccFirstName(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                          █▀▀ ▀█▀ █▀▄ █▀▀ ▀█▀   █▀█ █▀█ █▄█ █▀▀                                        \n"
         "                                          █▀▀  █  █▀▄ ▀▀█  █    █ █ █▀█ █ █ █▀▀                                        \n"
         "                                          ▀   ▀▀▀ ▀ ▀ ▀▀▀  ▀    ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀                                        \n"
@@ -579,7 +563,7 @@ void guiAccFirstName(){
 
 void guiAccLastName(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                            █   █▀█ █▀▀ ▀█▀   █▀█ █▀█ █▄█ █▀▀                                          \n"
         "                                            █   █▀█ ▀▀█  █    █ █ █▀█ █ █ █▀▀                                          \n"
         "                                            ▀▀▀ ▀ ▀ ▀▀▀  ▀    ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀                                          \n"
@@ -589,7 +573,7 @@ void guiAccLastName(){
 
 void guiAccMidName(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                        █▄█ ▀█▀ █▀▄ █▀▄ █   █▀▀   █▀█ █▀█ █▄█ █▀▀                                      \n"
         "                                        █ █  █  █ █ █ █ █   █▀▀   █ █ █▀█ █ █ █▀▀                                      \n"
         "                                        ▀ ▀ ▀▀▀ ▀▀  ▀▀  ▀▀▀ ▀▀▀   ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀                                      \n"
@@ -599,7 +583,7 @@ void guiAccMidName(){
 
 void guiAccStreet(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                                 █▀▀ ▀█▀ █▀▄ █▀▀ █▀▀ ▀█▀                                               \n"
         "                                                 ▀▀█  █  █▀▄ █▀▀ █▀▀  █                                                \n"
         "                                                 ▀▀▀  ▀  ▀ ▀ ▀▀▀ ▀▀▀  ▀                                                \n"
@@ -609,7 +593,7 @@ void guiAccStreet(){
 
 void guiAccBarangay(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                             █▀▄ █▀█ █▀▄ █▀█ █▀█ █▀▀ █▀█ █ █                                           \n"
         "                                             █▀▄ █▀█ █▀▄ █▀█ █ █ █ █ █▀█  █                                            \n"
         "                                             ▀▀  ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀ ▀  ▀                                            \n"
@@ -619,7 +603,7 @@ void guiAccBarangay(){
 
 void guiAccCity(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                                     █▀▀ ▀█▀ ▀█▀ █ █                                                   \n"
         "                                                     █    █   █   █                                                    \n"
         "                                                     ▀▀▀ ▀▀▀  ▀   ▀                                                    \n"
@@ -629,7 +613,7 @@ void guiAccCity(){
 
 void guiAccRegion(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                                 █▀▄ █▀▀ █▀▀ ▀█▀ █▀█ █▀█                                               \n"
         "                                                 █▀▄ █▀▀ █ █  █  █ █ █ █                                               \n"
         "                                                 ▀ ▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀                                               \n"
@@ -639,7 +623,7 @@ void guiAccRegion(){
 
 void guiAccPostalCode(){
     printf(
-        "\033[1;33m\n"
+        "\033[1;33m\n\n"
         "                                        █▀█ █▀█ █▀▀ ▀█▀ █▀█ █     █▀▀ █▀█ █▀▄ █▀▀                                     \n"
         "                                        █▀▀ █ █ ▀▀█  █  █▀█ █     █   █ █ █ █ █▀▀                                     \n"
         "                                        ▀   ▀▀▀ ▀▀▀  ▀  ▀ ▀ ▀▀▀   ▀▀▀ ▀▀▀ ▀▀  ▀▀▀                                     \n"
@@ -648,7 +632,7 @@ void guiAccPostalCode(){
 }
 
 void guiInputInvalidMessage() {
-    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
+    printf("\n\n                                            \033[31m Invalid input. Please try again.                                \033[0m");
     printf(
         "\033[1A\r\033[1A\r                                                                                                                     "
         "\033[1G\033[0m                               >   \033[1;33m "
@@ -743,7 +727,7 @@ int guiHandleAccSignup(Account *acc, Account *accb){
     return 1;
 }
 
-int guiHandleAccLogin(Account *acc, Account *accb){
+int guiHandleAccLogin(Account *accb){
     int accNum = 0;
     int loop = 1;
     char pass[50];
@@ -816,7 +800,6 @@ int guiHandlePassSignup(Account *acc, Account *accb){
         }
         
     }
-
     guiAccCPass();
     printf(
         "                                                                                                                     \n"
@@ -862,6 +845,7 @@ int guiHandleField(
 ) {
     if (*isAuth) {
         displayFunc();
+        printf("\033[0m");
         return guiAuthenticatedInput(label, authValue, inputValue);
     } else {
         if (clearScreenAndSignup) {
@@ -869,6 +853,7 @@ int guiHandleField(
             guiAccSignup();
         }
         displayFunc();
+        printf("\033[0m");
         return guiSignUpInput(label, authValue, inputValue);
     }
 }
@@ -900,6 +885,7 @@ int guiHandleWithdrawBal(Account *acc, Account *accb, int *isAuth, float *amount
                     "\n\033[1A\r\033[1A\r"
                 );
                 fflush(stdout);
+                pauseConsole();
                 return 0;
             }
 
@@ -965,6 +951,7 @@ int guiHandleDepositBal(Account *acc, Account *accb, int *isAuth, float *amount)
                     "\n\033[1A\r\033[1A\r"
                 );
                 fflush(stdout);
+                pauseConsole();
                 return 0;
             } else if (deposit <= 0.0f) {
                 printf("\n\n                        \033[31m Invalid deposit amount. Please enter an amount greater than PHP 0.00. \033[0m                  ");
@@ -986,6 +973,10 @@ int guiHandleDepositBal(Account *acc, Account *accb, int *isAuth, float *amount)
 
             }
         }
+        return 1;
+    } else {
+        LOG("User Not Authenticated! Exiting...");
+        return 0;
     }
 }
 
