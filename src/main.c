@@ -31,11 +31,13 @@ int main() {
     logReset();
     openLogViewer();
 
-    Account currentAcc;
-    Account backupAcc;
-    Transaction currentTrans;
+    Sleep(2000);
+
+    Account currentAcc = {0};
+    Account backupAcc = {0};
+    Transaction currentTrans = {0};
+
     initializeAcc(&currentAcc, &backupAcc);
-    initializeAccBackupFromAccount(&currentAcc, &backupAcc);
     initializeTrans(&currentTrans);
     int isAuth = 0;
     while (1) {
@@ -157,7 +159,7 @@ void handleSettingsMenu(Account *acc, Account *accb, int *isAuth) {
         switch (choice) {
             case '1':
                 LOG("Selected: Display Account Details");
-                guiAccDisplay(acc);
+                accDisplay(acc);
                 break;
             case '2':
                 LOG("Selected: Edit Account Details");

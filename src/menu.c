@@ -333,13 +333,13 @@ void guiAccDisplay(const Account *acc) {
         "                                                                                                                       \n"
         "\n"
         "\n"
-        "                                      Account Number      : \033[1;33m%d\033[0m\n"
-        "                                      Name                : \033[1;33m%s, %s %s\033[0m\n"
-        "                                      Street              : \033[1;33m%s\033[0m\n"
-        "                                      Barangay            : \033[1;33m%s\033[0m\n"
-        "                                      City                : \033[1;33m%s\033[0m\n"
-        "                                      Region              : \033[1;33m%s\033[0m\n"
-        "                                      Postal Code         : \033[1;33m%s\033[0m\n"
+        "                                         Account Number      : \033[1;33m%d\033[0m\n"
+        "                                         Name                : \033[1;33m%s, %s %s\033[0m\n"
+        "                                         Street              : \033[1;33m%s\033[0m\n"
+        "                                         Barangay            : \033[1;33m%s\033[0m\n"
+        "                                         City                : \033[1;33m%s\033[0m\n"
+        "                                         Region              : \033[1;33m%s\033[0m\n"
+        "                                         Postal Code         : \033[1;33m%s\033[0m\n"
         "\n"
         , acc->accountNumber, acc->lastname, acc->firstname, acc->midname, acc->street, acc->barangay, acc->city, acc->region, acc->postalCode
     );
@@ -358,8 +358,8 @@ void guiAccBalance(const Account *acc) {
         "                                                                                                                       \n"
         "\n"
         "\n"
-        "                                      Account Number      : \033[1;33m%d\033[0m\n"
-        "                                      Balance             : \033[1;33m%.2f\033[0m\n"
+        "                                         Account Number      : \033[1;33m%d\033[0m\n"
+        "                                         Balance             : \033[1;33m%.2f\033[0m\n"
         "\n"
         , acc->accountNumber, acc->balance
     );
