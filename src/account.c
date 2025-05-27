@@ -139,7 +139,7 @@ int accLogin(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccLogin();
 
-    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_LOGIN, isAuth, 0)) {
+    if (!guiHandleAccLogin(acc, accb)) {
         LOG("Operation canceled by user. [Account Number Log In]");
         guiAccLoginFailed();
         return 0;
@@ -158,44 +158,48 @@ int accLogin(Account *acc, Account *accb, int *isAuth) {
 int accSignup(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccSignup();
-    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_SIGNUP, isAuth, 0)) {
-        LOG("Operation canceled by user. [Account Number Sign Up\n");
+    if (!guiHandleAccSignup(acc, accb)) {
+        LOG("Operation canceled by user. [Account Number Sign Up");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth, 0)) {
-        LOG("Operation canceled by user. [Password Sign Up]\n");
+    if (!guiHandlePassSignup(acc, accb)) {
+        LOG("Operation canceled by user. [Password Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth, 0)) {
-        LOG("Operation canceled by user. [First Name Sign Up]\n");
+    if (!guiHandleField("First Name", accb->firstname, acc->firstname, isAuth, guiAccFirstName, 1)) {
+        LOG("Operation canceled by user. [First Name Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth, 0)) {
-        LOG("Operation canceled by user. [Last Name Sign Up]\n");
+    if (!guiHandleField("First Name", accb->firstname, acc->firstname, isAuth, guiAccFirstName, 1)) {
+        LOG("Operation canceled by user. [First Name Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth, 0)) {
-        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+    if (!guiHandleField("Last Name", accb->lastname, acc->lastname, isAuth, guiAccLastName, 0)) {
+        LOG("Operation canceled by user. [Last Name Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth, 0)) {
-        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+    if (!guiHandleField("Middle Name", accb->midname, acc->midname, isAuth, guiAccMidName, 0)) {
+        LOG("Operation canceled by user. [Middle Name Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth, 0)) {
-        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+    if (!guiHandleField("Street", accb->street, acc->street, isAuth, guiAccStreet, 1)) {
+        LOG("Operation canceled by user. [Street Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth, 0)) {
-        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+    if (!guiHandleField("Barangay", accb->barangay, acc->barangay, isAuth, guiAccBarangay, 0)) {
+        LOG("Operation canceled by user. [Barangay Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth, 0)) {
-        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+    if (!guiHandleField("City", accb->city, acc->city, isAuth, guiAccCity, 0)) {
+        LOG("Operation canceled by user. [City Sign Up]");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth, 0)) {
-        LOG("Operation canceled by user. [Middle Name Sign Up]\n");
+    if (!guiHandleField("Region", accb->region, acc->region, isAuth, guiAccRegion, 0)) {
+        LOG("Operation canceled by user. [Region Sign Up]");
+        return 0;
+    }
+    if (!guiHandleField("Postal Code", accb->postalCode, acc->postalCode, isAuth, guiAccPostalCode, 0)) {
+        LOG("Operation canceled by user. [Postal Code Sign Up]");
         return 0;
     }
 
@@ -233,15 +237,15 @@ int accEditName(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditName();
 
-    if (!guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth, 0)) {
+    if (!guiHandleField("First Name", accb->firstname, acc->firstname, isAuth, guiAccFirstName, 0)) {
         LOG("Operation canceled by user. [First Name Editing]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth, 0)) {
+    if (!guiHandleField("Last Name", accb->lastname, acc->lastname, isAuth, guiAccLastName, 0)) {
         LOG("Operation canceled by user. [Last Name Editing]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth, 0)) {
+    if (!guiHandleField("Middle Name", accb->midname, acc->midname, isAuth, guiAccMidName, 0)) {
         LOG("Operation canceled by user. [Middle Name Editing]\n");
         return 0;
     }
@@ -255,23 +259,23 @@ int accEditAddress(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditAddress();
 
-    if (!guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth, 0)) {
-    LOG("Operation canceled by user. [Street Editing]\n");
-    return 0;
+    if (!guiHandleField("Street", accb->street, acc->street, isAuth, guiAccStreet, 0)) {
+        LOG("Operation canceled by user. [Street Editing]\n");
+        return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth, 0)) {
+    if (!guiHandleField("Barangay", accb->barangay, acc->barangay, isAuth, guiAccBarangay, 0)) {
         LOG("Operation canceled by user. [Barangay Editing]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth, 0)) {
+    if (!guiHandleField("City", accb->city, acc->city, isAuth, guiAccCity, 0)) {
         LOG("Operation canceled by user. [City Editing]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth, 0)) {
+    if (!guiHandleField("Region", accb->region, acc->region, isAuth, guiAccRegion, 0)) {
         LOG("Operation canceled by user. [Region Editing]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth, 0)) {
+    if (!guiHandleField("Postal Code", accb->postalCode, acc->postalCode, isAuth, guiAccPostalCode, 0)) {
         LOG("Operation canceled by user. [Postal Code Editing]\n");
         return 0;
     }
@@ -284,7 +288,7 @@ int accEditAddress(Account *acc, Account *accb, int *isAuth) {
 int accEditPassword(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditPassword();
-    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth, 0)) {
+    if (!guiHandlePassSignup(acc, accb)) {
         LOG("Operation canceled by user. [Password Editing]\n");
         return 0;
     }

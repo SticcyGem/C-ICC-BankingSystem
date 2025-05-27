@@ -700,341 +700,292 @@ int guiSignUpInput(const char *label, char *oldValue, char *newValue) {
     return 1;
 }
 
-int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth, float *amount){
-    LOGGER();
+int guiHandleAccSignup(Account *acc, Account *accb){
+    int genAccNum = getNextAccountNumber("data/Account.txt");
+    int accNum;
     int loop = 1;
-    switch (choice){
-        case GUI_INPUT_ACCOUNTNUMBER_SIGNUP:
-            LOG("Using Account Number Input GUI");
 
-            int genAccNum = getNextAccountNumber("data/Account.txt");
-            int accNum;
+    printf(
+        "                                                Your Account ID Is: \033[1;33m%d\033[0m\n"
+        "                                  Remember it! You will need it to access your account.                                \n"
+        "\n"
+        "                                           Enter your Account ID to continue...                                        \n"
+        "\n", genAccNum
+    );
+    guiAccID();
+    printf("                               >   \033[1;33m ");
+    while (loop) {
+        int result = userInput("%d", &accNum);
+        if (result == -1) {
+            guiInputExitMessage();
+            return 0;
+        }
+        if (!result) {
+            guiInputInvalidMessage();
+            continue;
+        }
 
+        if (accNum != genAccNum) {
+            printf("\n\n                               \033[31m Account ID does not match. Please try again.                    \033[0m");
             printf(
-                "                                                Your Account ID Is: \033[1;33m%d\033[0m\n"
-                "                                  Remember it! You will need it to access your account.                                \n"
-                "\n"
-                "                                           Enter your Account ID to continue...                                        \n"
-                "\n", genAccNum
+                "\033[1A\r\033[1A\r                                                                                                                     "
+                "\033[1G\033[0m                               >   \033[1;33m "
             );
-            guiAccID();
-            printf("                               >   \033[1;33m ");
-            while (loop) {
-                int result = userInput("%d", &accNum);
-                if (result == -1) {
-                    guiInputExitMessage();
-                    return 0;
-                }
-                if (!result) {
-                    guiInputInvalidMessage();
-                    continue;
-                }
-        
-                if (accNum != genAccNum) {
-                    printf("\n\n                               \033[31m Account ID does not match. Please try again.                    \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
-                    continue;
-                }
+            fflush(stdout);
+            continue;
+        }
 
-                acc->accountNumber = genAccNum;
-                LOG_STRUCT_CHANGE_VAL("Account Number", accb->accountNumber, acc->accountNumber);
-                
-                break;
-            }
-            break;
-        case GUI_INPUT_ACCOUNTNUMBER_LOGIN:
-            int accNumL = 0;
-            char passL[50];
-            guiAccID();
-            printf("                               >   \033[1;33m ");
-            while (loop) {
-                int result = userInput("%d", &accNumL);
-                if (result == -1) {
-                    guiInputExitMessage();
-                    return 0;
-                }
-                if (!result) {
-                    guiInputInvalidMessage();
-                    continue;
-                }
-                break;
-            }
-            guiAccPass();
-            printf("                               >   \033[1;33m ");
-            while (loop) {
-                int result = userInput("%s", passL);
-                if (result == -1) {
-                    guiInputExitMessage();
-                    return 0;
-                }
+        acc->accountNumber = genAccNum;
+        LOG_STRUCT_CHANGE_VAL("Account Number", accb->accountNumber, acc->accountNumber);
 
-                if (!result) {
-                    guiInputInvalidMessage();
-                    continue;
-                }
-
-                break;
-            }
-
-            accb->accountNumber = accNumL;
-            strcpy(accb->password, passL);
-            break;
-        case GUI_INPUT_PASSWORD_SIGNUP:
-            LOG("Using Password Input GUI");
-            char pass[50];
-            char confirmPass[50];
-            guiAccPass();
-            printf("                               >   \033[1;33m ");
-            while (loop) {
-                int result = userInput("%s", pass);
-                if (result == -1) {
-                    guiInputExitMessage();
-                    return 0;
-                }
-                
-                if (!result) {
-                    guiInputInvalidMessage();
-                    continue;
-                }
-        
-                if (strlen(pass) < 6) {
-                    printf("\n\n                               \033[31m Password must be at least 6 characters long.                    \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
-                    continue;
-                } else {
-                    break;
-                }
-                
-            }
-            guiAccCPass();
-            printf(
-                "                                                                                                                     \n"
-                "\033[1A\r\033[1A\r\033[1A\r\033[1A\r                               >   \033[1;33m "
-            );
-            while (loop){
-                int result = userInput("%s", confirmPass);
-                if (result == -1) {
-                    guiInputExitMessage();
-                    return 0;
-                }
-                if (!result) {
-                    guiInputInvalidMessage();
-                    continue;
-                }
-                
-                if (strcmp(pass, confirmPass) != 0) {
-                    printf("\n\n                               \033[31m Password does not match. Please try again.                      \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
-                    continue;
-                }
-                
-                else {
-                    strcpy(acc->password, pass);
-                    LOG_STRUCT_CHANGE_STR("Password", accb->password, acc->password);
-                    break;
-                }
-            }
-            break;
-        case GUI_INPUT_FIRSTNAME:
-            LOG("Using First Name Input GUI");
-            if (*isAuth){
-                guiAccFirstName();
-                guiAuthenticatedInput("First Name", accb->firstname, acc->firstname);
-            } else{
-                system("cls");
-                guiAccSignup();
-                guiAccFirstName();
-                guiSignUpInput("First Name", accb->firstname, acc->firstname);
-            }
-            break;
-        case GUI_INPUT_LASTNAME:
-            LOG("Using Last Name Input GUI");
-            if (*isAuth){
-                guiAccLastName();
-                guiAuthenticatedInput("Last Name", accb->lastname, acc->lastname);
-            } else{
-                guiAccLastName();
-                guiSignUpInput("Last Name", accb->lastname, acc->lastname);
-            }
-            break;
-        case GUI_INPUT_MIDNAME:
-            LOG("Using Middle Name Input GUI");
-            if (*isAuth){
-                guiAccMidName();
-                guiAuthenticatedInput("Middle Name", accb->midname, acc->midname);
-            } else{
-                guiAccMidName();
-                guiSignUpInput("Middle Name", accb->midname, acc->midname);
-            }
-            break;
-        case GUI_INPUT_STREET:
-            LOG("Using Street Input GUI");
-            if (*isAuth){
-                guiAccStreet();
-                guiAuthenticatedInput("Street", accb->street, acc->street);
-            } else{
-                system("cls");
-                guiAccSignup();
-                guiAccStreet();
-                guiSignUpInput("Street", accb->street, acc->street);
-            }
-            break;
-        case GUI_INPUT_BARANGAY:
-            LOG("Using Barangay Input GUI");
-            if (*isAuth){
-                guiAccBarangay();
-                guiAuthenticatedInput("Barangay", accb->barangay, acc->barangay);
-            } else{
-                guiAccBarangay();
-                guiSignUpInput("Barangay", accb->barangay, acc->barangay);
-            }
-            break;
-        case GUI_INPUT_CITY:
-            LOG("Using City Input GUI");
-            if (*isAuth){
-                guiAccCity();
-                guiAuthenticatedInput("City", accb->city, acc->city);
-            } else{
-                guiAccCity();
-                guiSignUpInput("City", accb->city, acc->city);
-            }
-            break;
-        case GUI_INPUT_REGION:
-            LOG("Using Region Input GUI");
-            if (*isAuth){
-                guiAccRegion();
-                guiAuthenticatedInput("Region", accb->region, acc->region);
-            } else{
-                guiAccRegion();
-                guiSignUpInput("Region", accb->region, acc->region);
-            }
-            break;
-        case GUI_INPUT_POSTALCODE:
-            LOG("Using Postal Code Input GUI");
-            if (*isAuth){
-                guiAccPostalCode();
-                guiAuthenticatedInput("Postal Code", accb->postalCode, acc->postalCode);
-            } else {
-                guiAccPostalCode();
-                guiSignUpInput("Postal Code", accb->postalCode, acc->postalCode);
-            }
-            break;
-        case GUI_INPUT_WITHDRAWBALANCE:
-            LOG("Using Withdraw Input GUI");
-            float withdraw = 0.0f;
-            printf(
-                "\033[1;33m\n"
-                "                            █ █ ▀█▀ ▀█▀ █ █ █▀▄ █▀▄ █▀█ █ █   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                           \n"
-                "                            █▄█  █   █  █▀█ █ █ █▀▄ █▀█ █▄█   █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                           \n"
-                "                            ▀ ▀ ▀▀▀  ▀  ▀ ▀ ▀▀  ▀ ▀ ▀ ▀ ▀ ▀   ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                           \n"
-                "\033[0m\n"
-            );
-            printf("                               >   \033[1;33mPHP: ");
-
-            while (loop) {
-                int result = userInput("%f", &withdraw);
-                if (result == -1) {
-                    LOG("Esc key pressed. Exiting Withdrawal.");
-                    printf("\033[0m");
-                    return 0;
-                }
-                if (!result) {
-                    printf(
-                        "\033[1G\033[0m                               >   \033[1;33m%s\n", "Skipped! No Withdrawal made.                                     \n"
-                        "\n\033[1A\r\033[1A\r"
-                    );
-                    fflush(stdout);
-                    break;
-                }
-                if (withdraw <= 0.0f) {
-                    printf("\n\n                        \033[31m Invalid deposit amount. Please enter an amount greater than PHP 0.00. \033[0m                  ");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33mPHP: "
-                    );
-                    fflush(stdout);
-                    withdraw = 0.0f;
-                    continue;
-                }
-                if (withdraw > acc->balance) {
-                    printf("\n\n                                    \033[31m Insufficient funds. Your balance is PHP %.2f \033[0m                                    ", acc->balance);
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33mPHP: "
-                    );
-                    fflush(stdout);
-                    withdraw = 0.0f;
-                    continue;
-                }
-                withdraw = roundf(withdraw * 100) / 100;
-                acc->balance -= withdraw;
-                if (amount) *amount = withdraw;
-                LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
-                LOG("Withdrawn: %.2f", withdraw);
-                break;
-            }
-            break;
-        case GUI_INPUT_DEPOSITBALANCE:
-            LOG("Using Deposit Input GUI");
-            float deposit = 0.0f;
-            printf(
-                "\033[1;33m\n"
-                "                              █▀▄ █▀▀ █▀█ █▀█ █▀▀ ▀█▀ ▀█▀   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                             \n"
-                "                              █ █ █▀▀ █▀▀ █ █ ▀▀█  █   █    █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                             \n"
-                "                              ▀▀  ▀▀▀ ▀   ▀▀▀ ▀▀▀ ▀▀▀  ▀    ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                             \n"
-                "\033[0m\n"
-            );
-            printf("                               >   \033[1;33mPHP: ");
-            while (loop){
-                int result = userInput("%f", &deposit);
-                if (result == -1) {
-                    LOG("Esc key pressed. Exiting Account Number Input.");
-                    printf("\033[0m");
-                    return 0;
-                }
-                if (!result) {
-                    printf(
-                        "\033[1G\033[0m                               >   \033[1;33m%s\n", "Skipped! No Deposit made.                                     \n"
-                        "\n\033[1A\r\033[1A\r"
-                    );
-                    fflush(stdout);
-                    break;
-                } else if (deposit <= 0.0f) {
-                    printf("\n\n                        \033[31m Invalid deposit amount. Please enter an amount greater than PHP 0.00. \033[0m                  ");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33mPHP: "
-                    );
-                    fflush(stdout);
-                    deposit = 0.0f;
-                    continue;
-                } else {
-                    deposit = roundf(deposit * 100) / 100;
-                    acc->balance += deposit;
-                    if (amount) *amount = deposit;
-                    LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
-                    LOG("Deposited: %.2f", deposit);
-                    break;
-                }
-            }
-            break;
-        default :
-            LOG("Input GUI not Declared Properly, Skipping...");
-            break;
+        break;
     }
-    printf("\033[0m\n");
     return 1;
+}
+
+int guiHandleAccLogin(Account *acc, Account *accb){
+    int accNum = 0;
+    int loop = 1;
+    char pass[50];
+
+    guiAccID();
+    printf("                               >   \033[1;33m ");
+    while (loop) {
+        int result = userInput("%d", &accNum);
+        if (result == -1) {
+            guiInputExitMessage();
+            return 0;
+        }
+        if (!result) {
+            guiInputInvalidMessage();
+            continue;
+        }
+        break;
+    }
+    guiAccPass();
+    printf("                               >   \033[1;33m ");
+    while (loop) {
+        int result = userInput("%s", pass);
+        if (result == -1) {
+            guiInputExitMessage();
+            return 0;
+        }
+
+        if (!result) {
+            guiInputInvalidMessage();
+            continue;
+        }
+
+        break;
+    }
+
+    accb->accountNumber = accNum;
+    strcpy(accb->password, pass);
+    return 1;
+}
+
+int guiHandlePassSignup(Account *acc, Account *accb){
+    char pass[50];
+    char confirmPass[50];
+    int loop = 1;
+
+    guiAccPass();
+    printf("                               >   \033[1;33m ");
+    while (loop) {
+        int result = userInput("%s", pass);
+        if (result == -1) {
+            guiInputExitMessage();
+            return 0;
+        }
+        
+        if (!result) {
+            guiInputInvalidMessage();
+            continue;
+        }
+
+        if (strlen(pass) < 6) {
+            printf("\n\n                               \033[31m Password must be at least 6 characters long.                    \033[0m");
+            printf(
+                "\033[1A\r\033[1A\r                                                                                                                     "
+                "\033[1G\033[0m                               >   \033[1;33m "
+            );
+            fflush(stdout);
+            continue;
+        } else {
+            break;
+        }
+        
+    }
+
+    guiAccCPass();
+    printf(
+        "                                                                                                                     \n"
+        "\033[1A\r\033[1A\r\033[1A\r\033[1A\r                               >   \033[1;33m "
+    );
+    while (loop){
+        int result = userInput("%s", confirmPass);
+        if (result == -1) {
+            guiInputExitMessage();
+            return 0;
+        }
+        if (!result) {
+            guiInputInvalidMessage();
+            continue;
+        }
+        
+        if (strcmp(pass, confirmPass) != 0) {
+            printf("\n\n                               \033[31m Password does not match. Please try again.                      \033[0m");
+            printf(
+                "\033[1A\r\033[1A\r                                                                                                                     "
+                "\033[1G\033[0m                               >   \033[1;33m "
+            );
+            fflush(stdout);
+            continue;
+        }
+        
+        else {
+            strcpy(acc->password, pass);
+            LOG_STRUCT_CHANGE_STR("Password", accb->password, acc->password);
+            break;
+        }
+    }
+    return 1;
+}
+
+int guiHandleField(
+    const char *label,
+    char *authValue,
+    char *inputValue,
+    int *isAuth,
+    void (*displayFunc)(),
+    int clearScreenAndSignup
+) {
+    if (*isAuth) {
+        displayFunc();
+        return guiAuthenticatedInput(label, authValue, inputValue);
+    } else {
+        if (clearScreenAndSignup) {
+            system("cls");
+            guiAccSignup();
+        }
+        displayFunc();
+        return guiSignUpInput(label, authValue, inputValue);
+    }
+}
+
+int guiHandleWithdrawBal(Account *acc, Account *accb, int *isAuth, float *amount){
+    float withdraw = 0.0f;
+    int loop = 1;
+    if (*isAuth) {
+        printf(
+            "\033[1;33m\n"
+            "                            █ █ ▀█▀ ▀█▀ █ █ █▀▄ █▀▄ █▀█ █ █   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                           \n"
+            "                            █▄█  █   █  █▀█ █ █ █▀▄ █▀█ █▄█   █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                           \n"
+            "                            ▀ ▀ ▀▀▀  ▀  ▀ ▀ ▀▀  ▀ ▀ ▀ ▀ ▀ ▀   ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                           \n"
+            "\033[0m\n"
+        );
+        printf("                               >   \033[1;33mPHP: ");
+        
+        while (loop) {
+            int result = userInput("%f", &withdraw);
+
+            if (result == -1) {
+                    guiInputExitMessage();
+                    return 0;
+                }
+
+            if (!result) {
+                printf(
+                    "\033[1G\033[0m                               >   \033[1;33m%s\n", "Skipped! No Withdrawal made.                                     \n"
+                    "\n\033[1A\r\033[1A\r"
+                );
+                fflush(stdout);
+                return 0;
+            }
+
+            if (withdraw <= 0.0f) {
+                printf("\n\n                        \033[31m Invalid deposit amount. Please enter an amount greater than PHP 0.00. \033[0m                  ");
+                printf(
+                    "\033[1A\r\033[1A\r                                                                                                                     "
+                    "\033[1G\033[0m                               >   \033[1;33mPHP: "
+                );
+                fflush(stdout);
+                withdraw = 0.0f;
+                continue;
+            }
+
+            if (withdraw > acc->balance) {
+                printf("\n\n                                    \033[31m Insufficient funds. Your balance is PHP %.2f \033[0m                                    ", acc->balance);
+                printf(
+                    "\033[1A\r\033[1A\r                                                                                                                     "
+                    "\033[1G\033[0m                               >   \033[1;33mPHP: "
+                );
+                fflush(stdout);
+                withdraw = 0.0f;
+                continue;
+            }
+
+            withdraw = roundf(withdraw * 100) / 100;
+            acc->balance -= withdraw;
+            if (amount) *amount = withdraw;
+            LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
+            LOG("Withdrawn: %.2f", withdraw);
+            break;
+        }
+        return 1;
+    } else {
+        LOG("User Not Authenticated! Exiting...");
+        return 0;
+    }
+}
+
+int guiHandleDepositBal(Account *acc, Account *accb, int *isAuth, float *amount){
+    float deposit = 0.0f;
+    int loop = 1;
+    if (*isAuth){
+        printf(
+            "\033[1;33m\n"
+            "                              █▀▄ █▀▀ █▀█ █▀█ █▀▀ ▀█▀ ▀█▀   █▀▄ █▀█ █   █▀█ █▀█ █▀▀ █▀▀                             \n"
+            "                              █ █ █▀▀ █▀▀ █ █ ▀▀█  █   █    █▀▄ █▀█ █   █▀█ █ █ █   █▀▀                             \n"
+            "                              ▀▀  ▀▀▀ ▀   ▀▀▀ ▀▀▀ ▀▀▀  ▀    ▀▀  ▀ ▀ ▀▀▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀▀▀                             \n"
+            "\033[0m\n"
+        );
+        printf("                               >   \033[1;33mPHP: ");
+        while (loop){
+            int result = userInput("%f", &deposit);
+
+            if (result == -1) {
+                guiInputExitMessage();
+                return 0;
+            }
+
+            if (!result) {
+                printf(
+                    "\033[1G\033[0m                               >   \033[1;33m%s\n", "Skipped! No Deposit made.                                     \n"
+                    "\n\033[1A\r\033[1A\r"
+                );
+                fflush(stdout);
+                return 0;
+            } else if (deposit <= 0.0f) {
+                printf("\n\n                        \033[31m Invalid deposit amount. Please enter an amount greater than PHP 0.00. \033[0m                  ");
+                printf(
+                    "\033[1A\r\033[1A\r                                                                                                                     "
+                    "\033[1G\033[0m                               >   \033[1;33mPHP: "
+                );
+                fflush(stdout);
+                deposit = 0.0f;
+                continue;
+            } else {
+
+                deposit = roundf(deposit * 100) / 100;
+                acc->balance += deposit;
+                if (amount) *amount = deposit;
+                LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
+                LOG("Deposited: %.2f", deposit);
+                break;
+
+            }
+        }
+    }
 }
 

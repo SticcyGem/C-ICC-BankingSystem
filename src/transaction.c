@@ -19,7 +19,7 @@ void transDeposit(Account *acc, Account *accb, Transaction *trans, int *isAuth) 
     LOGGER();
     guiAccDeposit();
     float depositedAmount = 0.0f;
-    if (!guiStringInput(acc, accb, GUI_INPUT_DEPOSITBALANCE, isAuth, &depositedAmount)) {
+    if (!guiHandleDepositBal(acc, accb, isAuth, &depositedAmount)) {
         LOG("Operation canceled by user. [Account Deposit Balance]\n");
         return;
     }
@@ -37,7 +37,7 @@ void transWithdraw(Account *acc, Account *accb, Transaction *trans, int *isAuth)
     LOGGER();
     guiAccWithdraw();
     float withdrawnAmount = 0.0f;
-    if (!guiStringInput(acc, accb, GUI_INPUT_WITHDRAWBALANCE, isAuth, &withdrawnAmount)) {
+    if (!guiHandleWithdrawBal(acc, accb, isAuth, &withdrawnAmount)) {
         LOG("Operation canceled by user. [Account Withdraw Balance]\n");
         return;
     }
