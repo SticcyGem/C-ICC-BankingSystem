@@ -135,7 +135,7 @@ void guiMainMenu(const Account *acc){
         "                                  █▀▄ █▀█ █ █ █▀▄  █  █ █ █ █   ▀▀█  █  ▀▀█  █  █▀▀ █ █                                \n"
         "                                  ▀▀  ▀ ▀ ▀ ▀ ▀ ▀ ▀▀▀ ▀ ▀ ▀▀▀   ▀▀▀  ▀  ▀▀▀  ▀  ▀▀▀ ▀ ▀                                \n"
         "\n"
-        "                                                > Account Number: %d <                                             \n"
+        "                                                > Account Number: \033[1;33m%d\033[0m <                                             \n"
         "\n"
         "\n"
         "\n"
@@ -323,22 +323,76 @@ void guiDEBUG(){
 void guiAccDisplay(const Account *acc) {
     system("cls");
     LOGGER();
-    printf("=== Account Details ===\n");
-    printf("Account Number : %d\n", acc->accountNumber);
-    printf("Name           : %s, %s %s\n", acc->lastname, acc->firstname, acc->midname);
-    printf("Address        : %s, %s, %s, %s\n",
-           acc->street, acc->barangay, acc->city, acc->region);
-    printf("Postal Code    : %s\n", acc->postalCode);
-    pauseConsole();
+    printf(
+        "\n"
+        "                     █████   ██████  ██████        ██████  ███████ ████████  █████  ██ ██      ███████                 \n"
+        "                    ██   ██ ██      ██             ██   ██ ██         ██    ██   ██ ██ ██      ██                      \n"
+        "                    ███████ ██      ██             ██   ██ █████      ██    ███████ ██ ██      ███████                 \n"
+        "                    ██   ██ ██      ██             ██   ██ ██         ██    ██   ██ ██ ██           ██                 \n"
+        "                    ██   ██  ██████  ██████ ██     ██████  ███████    ██    ██   ██ ██ ███████ ███████                 \n"
+        "                                                                                                                       \n"
+        "\n"
+        "\n"
+        "                                      Account Number      : \033[1;33m%d\033[0m\n"
+        "                                      Name                : \033[1;33m%s, %s %s\033[0m\n"
+        "                                      Street              : \033[1;33m%s\033[0m\n"
+        "                                      Barangay            : \033[1;33m%s\033[0m\n"
+        "                                      City                : \033[1;33m%s\033[0m\n"
+        "                                      Region              : \033[1;33m%s\033[0m\n"
+        "                                      Postal Code         : \033[1;33m%s\033[0m\n"
+        "\n"
+        , acc->accountNumber, acc->lastname, acc->firstname, acc->midname, acc->street, acc->barangay, acc->city, acc->region, acc->postalCode
+    );
 }
 
 void guiAccBalance(const Account *acc) {
     system("cls");
     LOGGER();
-    printf("=== Account Inquiry ===\n");
-    printf("Account Number : %d\n", acc->accountNumber);
-    printf("Balance        : %.2f\n", acc->balance);
-    pauseConsole();
+     printf(
+        "\n"
+        "                 █████   ██████  ██████        ██████   █████  ██       █████  ███    ██  ██████ ███████               \n"
+        "                ██   ██ ██      ██             ██   ██ ██   ██ ██      ██   ██ ████   ██ ██      ██                    \n"
+        "                ███████ ██      ██             ██████  ███████ ██      ███████ ██ ██  ██ ██      █████                 \n"
+        "                ██   ██ ██      ██             ██   ██ ██   ██ ██      ██   ██ ██  ██ ██ ██      ██                    \n"
+        "                ██   ██  ██████  ██████ ██     ██████  ██   ██ ███████ ██   ██ ██   ████  ██████ ███████               \n"
+        "                                                                                                                       \n"
+        "\n"
+        "\n"
+        "                                      Account Number      : \033[1;33m%d\033[0m\n"
+        "                                      Balance             : \033[1;33m%.2f\033[0m\n"
+        "\n"
+        , acc->accountNumber, acc->balance
+    );
+}
+
+void guiAccStatement(const Account *acc, const Transaction *transList, int count) {
+    system("cls");
+    LOGGER();
+    printf(
+        "\n"
+        "      █████   ██████  ██████        ███████ ████████  █████  ████████ ███████ ███    ███ ███████ ███    ██ ████████    \n"
+        "     ██   ██ ██      ██             ██         ██    ██   ██    ██    ██      ████  ████ ██      ████   ██    ██       \n"
+        "     ███████ ██      ██             ███████    ██    ███████    ██    █████   ██ ████ ██ █████   ██ ██  ██    ██       \n"
+        "     ██   ██ ██      ██                  ██    ██    ██   ██    ██    ██      ██  ██  ██ ██      ██  ██ ██    ██       \n"
+        "     ██   ██  ██████  ██████ ██     ███████    ██    ██   ██    ██    ███████ ██      ██ ███████ ██   ████    ██       \n"
+        "                                                                                                                       \n"
+        "\n"
+        "                                                > Account Number: %d <                                             \n"
+        "\n", acc->accountNumber
+    );
+    printf(
+        "-----------------------------------------------------------------------------------------------------------------------\n"
+        "                 Date                   |                  Type                  |                 Amount              \n"
+        "-----------------------------------------------------------------------------------------------------------------------\n"
+    );
+    for (int i = 0; i < count; i++) {
+        printf("%-40s| %-39s| %.2f\n",
+            transList[i].date,
+            transList[i].transactionType == 1 ? "Deposit" : 
+            transList[i].transactionType == 2 ? "Withdraw" : "Other",
+            transList[i].amount);
+        }
+    printf("-----------------------------------------------------------------------------------------------------------------------\n");
 }
 
 void guiAccSignup() {
@@ -454,6 +508,24 @@ void guiAccLoginFailed(){
         "                              █▀█ █   █▀▀ █▀█ █▀▀ █▀▀    ▀█▀ █▀▄ █ █    █▀█ █▀▀ █▀█ ▀█▀ █▀█                            \n"
         "                              █▀▀ █   █▀▀ █▀█ ▀▀█ █▀▀     █  █▀▄  █     █▀█ █ █ █▀█  █  █ █                            \n"
         "                              ▀   ▀▀▀ ▀▀▀ ▀ ▀ ▀▀▀ ▀▀▀     ▀  ▀ ▀  ▀     ▀ ▀ ▀▀▀ ▀ ▀ ▀▀▀ ▀ ▀                            \n"
+    );
+    Sleep(2000);
+    pauseConsole();
+}
+
+void guiAccNoStatement(){
+    system("cls");
+    LOGGER();
+    printf(
+        "\033[31m\n\n\n\n\n\n\n\n\n"
+        "                       █▀█ █▀█   █▀█ █▀▀ █▀▀ █▀█ █ █ █▀█ ▀█▀   █▀▀ ▀█▀ █▀█ ▀█▀ █▀▀ █▄█ █▀▀ █▀█ ▀█▀                     \n"
+        "                       █ █ █ █   █▀█ █   █   █ █ █ █ █ █  █    ▀▀█  █  █▀█  █  █▀▀ █ █ █▀▀ █ █  █                      \n"
+        "                       ▀ ▀ ▀▀▀   ▀ ▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀  ▀    ▀▀▀  ▀  ▀ ▀  ▀  ▀▀▀ ▀ ▀ ▀▀▀ ▀ ▀  ▀                      \n"
+        "\n"
+        "                                           █▀█ █ █ █▀█ ▀█▀ █   █▀█ █▀▄ █   █▀▀                                         \n"
+        "                                           █▀█ ▀▄▀ █▀█  █  █   █▀█ █▀▄ █   █▀▀                                         \n"
+        "                                           ▀ ▀  ▀  ▀ ▀ ▀▀▀ ▀▀▀ ▀ ▀ ▀▀  ▀▀▀ ▀▀▀                                         \n"
+        "\033[0m\n"
     );
     Sleep(2000);
     pauseConsole();
@@ -575,18 +647,39 @@ void guiAccPostalCode(){
     );
 }
 
-void guiAuthenticatedInput(const char *label, char *oldValue, char *newValue) {
+void guiInputInvalidMessage() {
+    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
+    printf(
+        "\033[1A\r\033[1A\r                                                                                                                     "
+        "\033[1G\033[0m                               >   \033[1;33m "
+    );
+    fflush(stdout);
+}
+
+void guiInputExitMessage() {
+    LOG("Esc key pressed. Exiting...");
+    printf("\033[0m");
+}
+
+int guiAuthenticatedInput(const char *label, char *oldValue, char *newValue) {
     printf("      %49s   ->   \033[1;33m", oldValue);
 
-    if (userInput("%s", newValue)) {
+    int result = userInput("%s", newValue);
+    if (result == -1) {
+        printf("\033[0m\n");
+        guiInputExitMessage();
+        return 0;
+    }
+    if (result) {
         if (strcmp(oldValue, newValue) != 0) {
             LOG_STRUCT_CHANGE_STR(label, oldValue, newValue);
-            strcpy(oldValue, newValue); 
+            strcpy(oldValue, newValue);
         }
     } else {
         printf("\033[1G\033[0m      %49s   ->   \033[1;33m%s", oldValue, oldValue);
         fflush(stdout);
     }
+    return 1;
 }
 
 int guiSignUpInput(const char *label, char *oldValue, char *newValue) {
@@ -594,17 +687,11 @@ int guiSignUpInput(const char *label, char *oldValue, char *newValue) {
     while (1) {
         int result = userInput("%s", newValue);
         if (result == -1) {
-            LOG("Esc key pressed. Exiting input.");
-            printf("\033[0m");
+            guiInputExitMessage();
             return 0;
         }
         if (!result) {
-            printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
-            printf(
-                "\033[1A\r\033[1A\r                                                                                                                     "
-                "\033[1G\033[0m                               >   \033[1;33m "
-            );
-            fflush(stdout);
+            guiInputInvalidMessage();
             continue;
         }
         LOG_STRUCT_CHANGE_STR(label, oldValue, newValue);
@@ -613,7 +700,7 @@ int guiSignUpInput(const char *label, char *oldValue, char *newValue) {
     return 1;
 }
 
-int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
+int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth, float *amount){
     LOGGER();
     int loop = 1;
     switch (choice){
@@ -635,17 +722,11 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
             while (loop) {
                 int result = userInput("%d", &accNum);
                 if (result == -1) {
-                    LOG("Esc key pressed. Exiting Account Number Input.");
-                    printf("\033[0m");
+                    guiInputExitMessage();
                     return 0;
                 }
                 if (!result) {
-                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
+                    guiInputInvalidMessage();
                     continue;
                 }
         
@@ -673,17 +754,11 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
             while (loop) {
                 int result = userInput("%d", &accNumL);
                 if (result == -1) {
-                    LOG("Esc key pressed. Exiting Account Number Input.");
-                    printf("\033[0m");
+                    guiInputExitMessage();
                     return 0;
                 }
                 if (!result) {
-                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
+                    guiInputInvalidMessage();
                     continue;
                 }
                 break;
@@ -693,18 +768,12 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
             while (loop) {
                 int result = userInput("%s", passL);
                 if (result == -1) {
-                    LOG("Esc key pressed. Exiting Password Input.");
-                    printf("\033[0m");
+                    guiInputExitMessage();
                     return 0;
                 }
 
                 if (!result) {
-                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
+                    guiInputInvalidMessage();
                     continue;
                 }
 
@@ -723,18 +792,12 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
             while (loop) {
                 int result = userInput("%s", pass);
                 if (result == -1) {
-                    LOG("Esc key pressed. Exiting Account Number Input.");
-                    printf("\033[0m");
+                    guiInputExitMessage();
                     return 0;
                 }
                 
                 if (!result) {
-                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
+                    guiInputInvalidMessage();
                     continue;
                 }
         
@@ -759,19 +822,13 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
             while (loop){
                 int result = userInput("%s", confirmPass);
                 if (result == -1) {
-                    LOG("Esc key pressed. Exiting Account Number Input.");
-                    printf("\033[0m");
+                    guiInputExitMessage();
                     return 0;
                 }
                 if (!result) {
-                    printf("\n\n                               \033[31m Invalid input. Please try again.                                \033[0m");
-                    printf(
-                        "\033[1A\r\033[1A\r                                                                                                                     "
-                        "\033[1G\033[0m                               >   \033[1;33m "
-                    );
-                    fflush(stdout);
+                    guiInputInvalidMessage();
                     continue;
-                } 
+                }
                 
                 if (strcmp(pass, confirmPass) != 0) {
                     printf("\n\n                               \033[31m Password does not match. Please try again.                      \033[0m");
@@ -894,7 +951,10 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
                     return 0;
                 }
                 if (!result) {
-                    printf("\033[1G\033[0m                               >   \033[1;33m%s\n", "Skipped! No Withdrawal made.                                     ");
+                    printf(
+                        "\033[1G\033[0m                               >   \033[1;33m%s\n", "Skipped! No Withdrawal made.                                     \n"
+                        "\n\033[1A\r\033[1A\r"
+                    );
                     fflush(stdout);
                     break;
                 }
@@ -920,6 +980,7 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
                 }
                 withdraw = roundf(withdraw * 100) / 100;
                 acc->balance -= withdraw;
+                if (amount) *amount = withdraw;
                 LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
                 LOG("Withdrawn: %.2f", withdraw);
                 break;
@@ -944,7 +1005,10 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
                     return 0;
                 }
                 if (!result) {
-                    printf("\033[1G\033[0m                               >   \033[1;33m%s", "Skipped! No Deposit made.                                          ");
+                    printf(
+                        "\033[1G\033[0m                               >   \033[1;33m%s\n", "Skipped! No Deposit made.                                     \n"
+                        "\n\033[1A\r\033[1A\r"
+                    );
                     fflush(stdout);
                     break;
                 } else if (deposit <= 0.0f) {
@@ -959,6 +1023,7 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
                 } else {
                     deposit = roundf(deposit * 100) / 100;
                     acc->balance += deposit;
+                    if (amount) *amount = deposit;
                     LOG_STRUCT_CHANGE_VAL("Balance", accb->balance, acc->balance);
                     LOG("Deposited: %.2f", deposit);
                     break;
@@ -973,23 +1038,3 @@ int guiStringInput(Account *acc, Account *accb, int choice, int *isAuth){
     return 1;
 }
 
-void guiAccStatement(const Account *acc, const Transaction *trans) {
-    printf("=== Account Statement ===\n");
-
-    if (trans != NULL) {
-        printf("Recent Transaction:\n");
-        printf("Date: %s\n", trans->date);
-        
-        const char *typeStr = (trans->transactionType == 0) ? "Deposit" :
-                              (trans->transactionType == 1) ? "Withdraw" : "Unknown";
-
-        printf("Type: %s\n", typeStr);
-        printf("Amount: %.2f\n", trans->amount);
-    } else {
-        printf("No recent transaction available.\n");
-    }
-
-    printf("=========================\n");
-
-    // Placeholder for future GUI display logic
-}

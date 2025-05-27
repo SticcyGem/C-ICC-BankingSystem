@@ -1,15 +1,10 @@
 #include "debug.h"
 #include <stdarg.h>
-#include <direct.h>
-
-static char sessionLogFilename[256] = "";
-static int logFileInitialized = 0;
+#include <time.h>
 
 void write_log(const char *ansi_color, const char *fmt, ...) {
     static char history_filename[64] = "";
     static int is_history_initialized = 0;
-
-    _mkdir("log");
 
     if (!is_history_initialized) {
         time_t t = time(NULL);
@@ -27,10 +22,7 @@ void write_log(const char *ansi_color, const char *fmt, ...) {
         return;
     }
 
-    time_t now = time(NULL);
-    struct tm *tm_info = localtime(&now);
-    char time_buf[20];
-    strftime(time_buf, sizeof(time_buf), "%Y-%m-%d %H:%M:%S", tm_info);
+    const char *time_buf = getCurrentTimestamp();
 
     fprintf(f, "[%s] ", time_buf);
     fprintf(h, "[%s] ", time_buf);
@@ -58,12 +50,8 @@ void LOG_COLOR(const char *ansi_color, const char *fmt, ...) {
     FILE *f = fopen(DEBUG_LOG_FILE, "a");
     if (!f) return;
 
-    time_t t = time(NULL);
-    struct tm *tm_info = localtime(&t);
-    char time_buf[20];
-    strftime(time_buf, sizeof(time_buf), "%Y-%m-%d %H:%M:%S", tm_info);
+    const char *time_buf = getCurrentTimestamp();
     fprintf(f, "[%s] ", time_buf);
-
     fprintf(f, "%s", ansi_color);
 
     va_list args;
@@ -89,6 +77,6 @@ void logReset() {
 void openLogViewer() {
     LOGGER();
     #if DEBUG
-        system("start \"LogViewerWindow\" powershell -NoExit -Command \"$host.UI.RawUI.WindowTitle = 'LogViewerWindow'; Get-Content log.txt -Wait\"");
+        system("start \"LogViewerWindow\" powershell -NoExit -Command \"$host.UI.RawUI.WindowTitle = 'LogViewerWindow'; Get-Content log\\log.txt -Wait\"");
     #endif
 }

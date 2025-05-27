@@ -18,29 +18,53 @@
 void transDeposit(Account *acc, Account *accb, Transaction *trans, int *isAuth) {
     LOGGER();
     guiAccDeposit();
-    if (!guiStringInput(acc, accb, GUI_INPUT_DEPOSITBALANCE, isAuth)) {
-        LOG("Operation canceled by user. [Account Deposit Balance\n");
+    float depositedAmount = 0.0f;
+    if (!guiStringInput(acc, accb, GUI_INPUT_DEPOSITBALANCE, isAuth, &depositedAmount)) {
+        LOG("Operation canceled by user. [Account Deposit Balance]\n");
         return;
     }
+
+    setCurrentDate(trans->date, sizeof(trans->date));
+    trans->transactionType = 1;
+    trans->amount = depositedAmount;
+
+    logTransaction(trans, acc->accountNumber, "data/StatementOfAccount.txt");
+    saveOrUpdateAccount(acc, "data/Account.txt");
     pauseConsole();
 }
 
 void transWithdraw(Account *acc, Account *accb, Transaction *trans, int *isAuth) {
     LOGGER();
     guiAccWithdraw();
-    if (!guiStringInput(acc, accb, GUI_INPUT_WITHDRAWBALANCE, isAuth)) {
-        LOG("Operation canceled by user. [Account Withdraw Balance\n");
+    float withdrawnAmount = 0.0f;
+    if (!guiStringInput(acc, accb, GUI_INPUT_WITHDRAWBALANCE, isAuth, &withdrawnAmount)) {
+        LOG("Operation canceled by user. [Account Withdraw Balance]\n");
         return;
     }
+
+    setCurrentDate(trans->date, sizeof(trans->date));
+    trans->transactionType = 2;
+    trans->amount = withdrawnAmount;
+
+    logTransaction(trans, acc->accountNumber, "data/StatementOfAccount.txt");
+    saveOrUpdateAccount(acc, "data/Account.txt");
     pauseConsole();
 }
 
-void transBalance(const Account *acc, Account *accb) {
+void transStatement(const Account *acc) {
     LOGGER();
-    guiAccBalance(acc);
+    Transaction transList[100] = {0};
+    int count = getTransactionsByAcc(transList, acc->accountNumber, "data/StatementOfAccount.txt");
+    if (count == 0) {
+        guiAccNoStatement();
+        return;
+    }
+    guiAccStatement(acc, transList, count);
+    pauseConsole();
 }
 
-void transStatement(const Account *acc, Account *accb, const Transaction *trans) {
+void transBalance(const Account *acc) {
     LOGGER();
-    guiAccStatement(acc, trans);
+    guiAccBalance(acc);
+    pauseConsole();
 }

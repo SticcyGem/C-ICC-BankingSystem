@@ -115,22 +115,20 @@ int loadAccountByNumber(Account *acc, Account *accb, int accountNumber, const ch
     return 1;
 }
 
-int saveOrUpdateAccount(Account *acc, Account *accb, const char *filename) {
+int saveOrUpdateAccount(Account *acc, const char *filename) {
     LOGGER();
-    Account tempAcc;
+
+    if (!fileExists(filename)) {
+        return 0;
+    }
 
     FILE *file = fopen(filename, "rb");
     if (!file) {
-        LOG_WARN("Account file not found, creating new one: %s", filename);
-        file = fopen(filename, "wb");
-        if (!file) {
-            LOG_ERROR("Failed to create file: %s", filename);
-            return 0;
-        }
-        fclose(file);
-        file = fopen(filename, "rb");
+        LOG_ERROR("Failed to open file for reading after ensuring it exists: %s", filename);
+        return 0;
     }
 
+    Account tempAcc;
     FILE *temp = fopen("data/temp.dat", "wb");
     if (!temp) {
         fclose(file);
@@ -151,6 +149,7 @@ int saveOrUpdateAccount(Account *acc, Account *accb, const char *filename) {
                 found = 1;
                 continue;
             }
+            // Logging changes...
             LOG_FILE_CHANGE_VAL("accountNumber", tempAcc.accountNumber, acc->accountNumber);
             LOG_FILE_CHANGE_STR("password", tempAcc.password, acc->password);
             LOG_FILE_CHANGE_STR("firstname", tempAcc.firstname, acc->firstname);
@@ -211,12 +210,82 @@ int saveOrUpdateAccount(Account *acc, Account *accb, const char *filename) {
     return 1;
 }
 
-int getTransactionsByAcc(Transaction *list, int accountNumber, const char *filename){
+int getTransactionsByAcc(Transaction *list, int accountNumber, const char *filename) {
     LOGGER();
+    FILE *file = fopen(filename, "rb");
+    if (!file) {
+        LOG_ERROR("Could not open transaction file: %s", filename);
+        return 0;
+    }
+
+    Transaction temp;
+    int count = 0;
+
+    while (fread(&temp, sizeof(Transaction), 1, file) == 1) {
+        if (temp.accountNumber == accountNumber) {
+            if (count < 100) {
+                list[count++] = temp;
+            } else {
+                LOG_ERROR("Transaction list is full. Some transactions might not be loaded.");
+                break;
+            }
+        }
+    }
+
+    fclose(file);
+    return count;
+}
+
+int logTransaction(Transaction *trans, int accountNumber, const char *filename) {
+    LOGGER();
+    FILE *file = fopen(filename, "ab");
+    if (!file) {
+        LOG_ERROR("Unable to open transaction log for writing: %s", filename);
+        return 0;
+    }
+
+    trans->accountNumber = accountNumber;
+
+    size_t written = fwrite(trans, sizeof(Transaction), 1, file);
+    fclose(file);
+
+    return written == 1 ? 1 : 0;
+}
+
+int deleteTransactionsByAccount(int accountNumber, const char *filename) {
+    LOGGER();
+    FILE *file = fopen(filename, "rb");
+    if (!file) {
+        LOG_ERROR("Could not open transaction file for reading: %s", filename);
+        return 0;
+    }
+
+    Transaction tempList[100];
+    int count = 0;
+    Transaction temp;
+
+    while (fread(&temp, sizeof(Transaction), 1, file) == 1) {
+        if (temp.accountNumber != accountNumber) {
+            if (count < 100) {
+                tempList[count++] = temp;
+            } else {
+                LOG_ERROR("Buffer full while deleting transactions. Some transactions may be skipped.");
+                break;
+            }
+        }
+    }
+    fclose(file);
+
+    file = fopen(filename, "wb");
+    if (!file) {
+        LOG_ERROR("Could not open transaction file for writing: %s", filename);
+        return 0;
+    }
+
+    fwrite(tempList, sizeof(Transaction), count, file);
+    fclose(file);
+
+    LOG("Deleted all transactions for account #%d\n", accountNumber);
     return 1;
 }
 
-int logTransaction(Transaction *trans, int accountNumber, const char *filename){
-    LOGGER();
-    return 1;
-}

@@ -8,7 +8,7 @@
 #include <stdarg.h>
 
 // === Toggle Flags ===
-#define DEBUG 0         // Set 0 to disable debug logs
+#define DEBUG 1         // Set 0 to disable debug logs
 #define INPUT_DEBUG 1   // Set 0 to disable key input logs
 
 // === ANSI Escape Codes for Colors ===
@@ -20,7 +20,7 @@
 #define ANSI_COLOR_RESET    "\033[0m"    // Reset color
 
 // === Log File Path ===
-#define DEBUG_LOG_FILE "log.txt" // Main log file
+#define DEBUG_LOG_FILE "log/log.txt" // Main log file
 
 // === Function declarations ===
 void write_log(const char *ansi_color, const char *fmt, ...);
@@ -106,11 +106,13 @@ void LOG_COLOR(const char *ansi_color, const char *fmt, ...);
     #define LOG_KEY_INPUT(ch)
 #endif
 
-// Optional functions you might implement later
-void openLogViewer();
-void logReset();
-void initSessionLogFilename();
+// debuc.c
 void write_log(const char *ansi_color, const char *fmt, ...);
 void LOG_COLOR(const char *ansi_color, const char *fmt, ...);
+void openLogViewer();
+void logReset();
+
+// common.c
+const char *getCurrentTimestamp();
 
 #endif // DEBUG_H

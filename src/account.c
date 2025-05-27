@@ -139,7 +139,7 @@ int accLogin(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccLogin();
 
-    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_LOGIN, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_LOGIN, isAuth, 0)) {
         LOG("Operation canceled by user. [Account Number Log In]");
         guiAccLoginFailed();
         return 0;
@@ -158,49 +158,49 @@ int accLogin(Account *acc, Account *accb, int *isAuth) {
 int accSignup(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccSignup();
-    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_SIGNUP, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_ACCOUNTNUMBER_SIGNUP, isAuth, 0)) {
         LOG("Operation canceled by user. [Account Number Sign Up\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth, 0)) {
         LOG("Operation canceled by user. [Password Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth, 0)) {
         LOG("Operation canceled by user. [First Name Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth, 0)) {
         LOG("Operation canceled by user. [Last Name Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth, 0)) {
         LOG("Operation canceled by user. [Middle Name Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth, 0)) {
         LOG("Operation canceled by user. [Middle Name Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth, 0)) {
         LOG("Operation canceled by user. [Middle Name Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth, 0)) {
         LOG("Operation canceled by user. [Middle Name Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth, 0)) {
         LOG("Operation canceled by user. [Middle Name Sign Up]\n");
         return 0;
     }
-    if (!guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth)) {
+    if (!guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth, 0)) {
         LOG("Operation canceled by user. [Middle Name Sign Up]\n");
         return 0;
     }
 
     initializeAccBackupFromAccount(acc, accb);
-    saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    saveOrUpdateAccount(acc, "data/Account.txt");
     pauseConsole();
     return 1;
 }
@@ -213,51 +213,88 @@ void accLogout(Account *acc, Account *accb) {
 }
 
 void accDelete(Account *acc, Account *accb) {
+    LOGGER();
+    
     acc->toDelete = 1;
     LOG_STRUCT_CHANGE_VAL("toDelete", accb->toDelete, acc->toDelete);
-    saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    
+    saveOrUpdateAccount(acc, "data/Account.txt");
+
+    if (deleteTransactionsByAccount(acc->accountNumber, "data/StatementOfAccount.txt")) {
+        LOG("Associated transactions deleted for account #%d\n", acc->accountNumber);
+    } else {
+        LOG_ERROR("Failed to delete transactions for account #%d\n", acc->accountNumber);
+    }
+
     accLogout(acc, accb);
-    LOGGER();
 }
 
-void accEditName(Account *acc, Account *accb, int *isAuth) {
+int accEditName(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditName();
 
-    guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth);
-    guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth);
-    guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth);
+    if (!guiStringInput(acc, accb, GUI_INPUT_FIRSTNAME, isAuth, 0)) {
+        LOG("Operation canceled by user. [First Name Editing]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_LASTNAME, isAuth, 0)) {
+        LOG("Operation canceled by user. [Last Name Editing]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_MIDNAME, isAuth, 0)) {
+        LOG("Operation canceled by user. [Middle Name Editing]\n");
+        return 0;
+    }
 
-    saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    saveOrUpdateAccount(acc, "data/Account.txt");
     pauseConsole();
+    return 1;
 }
 
-void accEditAddress(Account *acc, Account *accb, int *isAuth) {
+int accEditAddress(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditAddress();
 
-    guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth);
-    guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth);
-    guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth);
-    guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth);
-    guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth);
+    if (!guiStringInput(acc, accb, GUI_INPUT_STREET, isAuth, 0)) {
+    LOG("Operation canceled by user. [Street Editing]\n");
+    return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_BARANGAY, isAuth, 0)) {
+        LOG("Operation canceled by user. [Barangay Editing]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_CITY, isAuth, 0)) {
+        LOG("Operation canceled by user. [City Editing]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_REGION, isAuth, 0)) {
+        LOG("Operation canceled by user. [Region Editing]\n");
+        return 0;
+    }
+    if (!guiStringInput(acc, accb, GUI_INPUT_POSTALCODE, isAuth, 0)) {
+        LOG("Operation canceled by user. [Postal Code Editing]\n");
+        return 0;
+    }
 
-    saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    saveOrUpdateAccount(acc, "data/Account.txt");
     pauseConsole();
+    return 1;
 }
     
-void accEditPassword(Account *acc, Account *accb, int *isAuth) {
+int accEditPassword(Account *acc, Account *accb, int *isAuth) {
     LOGGER();
     guiAccEditPassword();
-    guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth);
-
-    saveOrUpdateAccount(acc, accb, "data/Account.txt");
+    if (!guiStringInput(acc, accb, GUI_INPUT_PASSWORD_SIGNUP, isAuth, 0)) {
+        LOG("Operation canceled by user. [Password Editing]\n");
+        return 0;
+    }
+    saveOrUpdateAccount(acc, "data/Account.txt");
+    return 1;
 }
 
 void accDisplay(const Account *acc) {
     LOGGER();
-}
+    guiAccDisplay(acc);
 
-void transDisplay(const Transaction *trans) {
-    LOGGER();
+    pauseConsole();
 }

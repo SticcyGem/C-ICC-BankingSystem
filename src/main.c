@@ -19,10 +19,17 @@
 #include "lib/bankinglib.h"
 
 int main() {
-    logReset();
-    openLogViewer();
     LOG("Starting Banking System..");
     system("chcp 65001 > nul");
+
+    fileExists("data/Account.txt");
+    fileExists("data/StatementOfAccount.txt");
+    fileExists("log/log.txt");
+
+    Sleep(2000);
+    
+    logReset();
+    openLogViewer();
 
     Account currentAcc;
     Account backupAcc;
@@ -31,31 +38,6 @@ int main() {
     initializeAccBackupFromAccount(&currentAcc, &backupAcc);
     initializeTrans(&currentTrans);
     int isAuth = 0;
-    while (DEBUG) {
-        guiDEBUG();
-        LOG_WARN("Debug Mode: ON");
-        LOG_WARN("To turn off DEBUG MODE, go to debug.h and set DEBUG to 0");
-        char choice = menuInput();
-        switch (choice) {
-            case MENU_STARTUP_NORMAL:
-                LOG("Selected: Normal Mode");
-                while (1) {
-                    if (!isAuth) {
-                        handleAuthMenu(&currentAcc, &backupAcc, &isAuth);
-                    } else {
-                        handleMainMenu(&currentAcc, &backupAcc, &currentTrans, &isAuth);
-                    }
-                }
-                break;
-            case MENU_STARTUP_DEBUG:
-                LOG("Selected: Debug Mode");
-                example1(&currentAcc, &backupAcc);
-                break;
-            default:
-                LOG("Selected: Invalid Choice");
-                break;
-        }
-    }
     while (1) {
         if (!isAuth) {
             handleAuthMenu(&currentAcc, &backupAcc, &isAuth);
@@ -110,7 +92,7 @@ void handleMainMenu(Account *acc, Account *accb, Transaction *trans, int *isAuth
         switch (choice) {
             case MENU_MAIN_INQUIRY:
                 LOG("Selected: Inquiry");
-                handleInquiryMenu(acc, accb, trans);
+                handleInquiryMenu(acc);
                 break;
             case MENU_MAIN_DEPOSIT:
                 LOG("Selected: Deposit");
@@ -141,7 +123,7 @@ void handleMainMenu(Account *acc, Account *accb, Transaction *trans, int *isAuth
 }
 
 // -------------------- INQUIRY MENU FUNCTIONS --------------------
-void handleInquiryMenu(const Account *acc, Account *accb, const Transaction *trans) {
+void handleInquiryMenu(const Account *acc) {
     int loop = 1;
     while (loop){
         guiAccInquiryMenu();
@@ -149,11 +131,11 @@ void handleInquiryMenu(const Account *acc, Account *accb, const Transaction *tra
         switch (choice) {
             case MENU_INQUIRY_BALANCE:
                 LOG("Selected: Check Balance");
-                transBalance(acc, accb);
+                transBalance(acc);
                 break;
             case MENU_INQUIRY_STATEMENT:
                 LOG("Selected: Account Statement");
-                transStatement(acc, accb, trans);
+                transStatement(acc);
                 break;
             case MENU_INQUIRY_BACK:
                 LOG("Selected: Back");
